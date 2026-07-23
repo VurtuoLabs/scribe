@@ -1,5 +1,5 @@
 /**
- * Topic 1 — Log This Call. The entry point for almost every interaction.
+ * Topic 1, Log This Call. The entry point for almost every interaction.
  * Extracts stage-relevant facts, objections and sentiment, logs them against the
  * Opportunity as a permanent Scribe_Call_Log__c, and caches the single parse so
  * every downstream topic reads the same extraction. Lowest risk (purely
@@ -88,7 +88,7 @@ public with sharing class Scribe_LogCallInvocable {
             + 'Found ' + parse.commitments.size() + ' commitment(s) and '
             + parse.people.size() + ' person(s) mentioned'
             + (String.isBlank(parse.objections) ? '' : '; objections noted') + '.'
-            + (parse.lowConfidence ? ' NOTE: the recap was thin — ask the rep to add detail before inferring changes.' : '');
+            + (parse.lowConfidence ? ' NOTE: the recap was thin, ask the rep to add detail before inferring changes.' : '');
         return r;
     }
 }

@@ -1,14 +1,14 @@
 /**
- * Topic 5 — Multi-Contact Detection. Finds people mentioned on the call who
+ * Topic 5, Multi-Contact Detection. Finds people mentioned on the call who
  * aren't already Contacts on the Opportunity/Account and drafts new Contact
- * records — but only creates them on an explicit apply, since contact creation
+ * records, but only creates them on an explicit apply, since contact creation
  * has downstream effects. Each created Contact is linked to the Account, added as
  * an OpportunityContactRole, and audited as a Contact Created row.
  *
  * Two-phase: apply=false returns the drafts to show the rep; apply=true creates
  * them after confirmation (the topic also carries require_user_confirmation).
  * Candidates come from either agent-supplied drafts (contactList) or, failing
- * that, the deterministic people extraction — never invented.
+ * that, the deterministic people extraction, never invented.
  */
 public with sharing class Scribe_DetectNewContactsInvocable {
 
@@ -75,7 +75,7 @@ public with sharing class Scribe_DetectNewContactsInvocable {
         if (drafts.isEmpty()) {
             r.applied = false;
             r.createdCount = 0;
-            r.summary = 'No new stakeholders to add — everyone mentioned is already a Contact on this deal.';
+            r.summary = 'No new stakeholders to add, everyone mentioned is already a Contact on this deal.';
             return r;
         }
 

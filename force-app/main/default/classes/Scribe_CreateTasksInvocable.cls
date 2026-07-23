@@ -1,9 +1,9 @@
 /**
- * Topic 3 — Create Follow-Up Tasks. Scans the recap for commitments ("I'll...",
+ * Topic 3, Create Follow-Up Tasks. Scans the recap for commitments ("I'll...",
  * "we will...") on either side of the conversation and creates one Task per
  * commitment, with an owner and due date inferred from context. This is the topic
  * most responsible for making sure verbal commitments don't silently disappear.
- * Additive and lower-risk, so it runs without a heavy confirmation gate — but the
+ * Additive and lower-risk, so it runs without a heavy confirmation gate, but the
  * agent still shows what it extracted first. Every Task gets an audit row.
  */
 public with sharing class Scribe_CreateTasksInvocable {
@@ -47,7 +47,7 @@ public with sharing class Scribe_CreateTasksInvocable {
             r.success = true;
             r.taskCount = 0;
             r.summary = parse.lowConfidence
-                ? 'The recap was too vague to pull out any commitments — ask the rep what they promised to do next.'
+                ? 'The recap was too vague to pull out any commitments, ask the rep what they promised to do next.'
                 : 'No commitments were found in the recap, so no tasks were created.';
             return r;
         }
