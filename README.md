@@ -185,7 +185,7 @@ force-app/main/default/
 
 ## Status & known environment notes
 
-**Deployed and verified** to a Developer Edition org (`imperialealex@gmail.com`): all objects, the stage-requirement type **and its 13 seed records**, 16 Apex classes, 5 Flows, 3 LWCs, 2 flexipages, 4 tabs, the Scribe app, both permission sets (assigned), and the `Scribe_Agent` AiAuthoringBundle. **All 20 Apex tests pass at 94% coverage of the exercised classes.**
+**Deployed and verified** to a Developer Edition org: all objects, the stage-requirement type **and its 13 seed records**, 16 Apex classes, 5 Flows, 3 LWCs, 2 flexipages, 4 tabs, the Scribe app, both permission sets (assigned), and the `Scribe_Agent` AiAuthoringBundle. **All 20 Apex tests pass at 94% coverage of the exercised classes.**
 
 Two org-specific deployment notes, already handled in this repo:
 
