@@ -1,5 +1,5 @@
 /**
- * The audit backbone. Every write Scribe makes — no exceptions — funnels through
+ * The audit backbone. Every write Scribe makes, no exceptions, funnels through
  * here so a Scribe_Change_Log__c row exists for it. This is deliberately not
  * optional or configurable: the whole point of the audit layer is that nothing
  * Scribe does is invisible.

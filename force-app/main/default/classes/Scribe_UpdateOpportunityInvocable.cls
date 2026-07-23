@@ -1,5 +1,5 @@
 /**
- * Topic 2 — Update Opportunity. Proposes specific field changes (Stage, Close
+ * Topic 2, Update Opportunity. Proposes specific field changes (Stage, Close
  * Date, Amount, Next Step) inferred from the call and, only on an explicit apply,
  * writes them field-by-field. Never writes anything the caller didn't pass, and
  * every applied change produces a Field Update audit row with before/after values.
@@ -131,7 +131,7 @@ public with sharing class Scribe_UpdateOpportunityInvocable {
 
         if (lines.isEmpty()) {
             r.applied = false;
-            r.summary = 'No field changes to make — the proposed values already match the record.';
+            r.summary = 'No field changes to make, the proposed values already match the record.';
             return r;
         }
 

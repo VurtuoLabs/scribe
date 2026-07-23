@@ -12,7 +12,7 @@ public class Scribe_CallParse {
     /** A commitment someone made on the call ("I'll send pricing"). */
     public class Commitment {
         public String text;         // The commitment, cleaned up into a task-like phrase.
-        public String owner;        // 'rep' or 'customer' — who promised it.
+        public String owner;        // 'rep' or 'customer', who promised it.
         public Integer dueInDays;   // Inferred timing cue in days, null when none found.
         public Commitment() {}
         public Commitment(String text, String owner, Integer dueInDays) {

@@ -1,5 +1,5 @@
 /**
- * Topic 4 — Flag Missing Info. Compares what the deal has actually covered
+ * Topic 4, Flag Missing Info. Compares what the deal has actually covered
  * (across this recap and every prior Scribe call log on the Opportunity) against
  * what the current stage requires per Scribe_Stage_Requirement__mdt, and creates
  * a reminder Task for whatever is still missing. Turns Scribe from a passive
@@ -119,7 +119,7 @@ public with sharing class Scribe_CheckStageRequirementsInvocable {
         if (tasks.isEmpty()) {
             r.tasksCreated = 0;
             r.summary = 'Still missing for "' + opp.StageName + '": ' + String.join(missingLabels, ', ')
-                + ' — reminders already exist, so no duplicates were created.';
+                + ', reminders already exist, so no duplicates were created.';
             return r;
         }
 

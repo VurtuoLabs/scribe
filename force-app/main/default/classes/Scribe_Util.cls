@@ -1,5 +1,5 @@
 /**
- * Small shared helpers for the invocables — Id coercion and date parsing that
+ * Small shared helpers for the invocables, Id coercion and date parsing that
  * degrade gracefully instead of throwing on the loose strings an agent passes.
  */
 public with sharing class Scribe_Util {
