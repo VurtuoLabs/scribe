@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Call_Summary__c</fullName>
+    <label>Call Summary</label>
+    <type>LongTextArea</type>
+    <length>131072</length>
+    <visibleLines>10</visibleLines>
+    <description>The raw recap, bullet list, stream-of-consciousness note, or pasted transcript the rep provided. Scribe parses this once and every downstream action reads from that single parse.</description>
+</CustomField>

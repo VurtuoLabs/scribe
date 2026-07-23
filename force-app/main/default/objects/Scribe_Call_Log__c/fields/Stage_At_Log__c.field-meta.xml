@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Stage_At_Log__c</fullName>
+    <label>Opportunity Stage At Log</label>
+    <type>Text</type>
+    <length>255</length>
+    <required>false</required>
+    <description>The Opportunity StageName at the moment this call was logged, for historical context.</description>
+</CustomField>

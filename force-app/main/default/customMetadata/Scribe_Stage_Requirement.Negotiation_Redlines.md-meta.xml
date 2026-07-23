@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <label>Negotiation: Redlines</label>
+    <protected>false</protected>
+    <values><field>Stage_Name__c</field><value xsi:type="xsd:string">Negotiation/Review</value></values>
+    <values><field>Requirement_Key__c</field><value xsi:type="xsd:string">Redlines</value></values>
+    <values><field>Requirement_Label__c</field><value xsi:type="xsd:string">Contract / redlines status known</value></values>
+    <values><field>Detection_Keywords__c</field><value xsi:type="xsd:string">redline,contract,terms,msa,legal,clause,negotiat,paper</value></values>
+    <values><field>Reminder_Task_Subject__c</field><value xsi:type="xsd:string">Scribe: Track contract redline status</value></values>
+    <values><field>Reminder_Due_In_Days__c</field><value xsi:type="xsd:double">1</value></values>
+    <values><field>Sort_Order__c</field><value xsi:type="xsd:double">20</value></values>
+    <values><field>Is_Active__c</field><value xsi:type="xsd:boolean">true</value></values>
+</CustomMetadata>

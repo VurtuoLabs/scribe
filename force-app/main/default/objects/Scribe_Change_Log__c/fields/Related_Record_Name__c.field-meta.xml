@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Related_Record_Name__c</fullName>
+    <label>Related Record Name</label>
+    <type>Text</type>
+    <length>255</length>
+    <required>false</required>
+    <description>Human-friendly name of the changed record, captured at write time so the audit row reads clearly even if the record is later renamed or deleted.</description>
+</CustomField>

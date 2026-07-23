@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Requirement_Label__c</fullName>
+    <label>Requirement Label</label>
+    <type>Text</type>
+    <length>255</length>
+    <required>true</required>
+    <description>Human-readable description of the requirement, used in reminder Task subjects and agent messages.</description>
+</CustomField>
