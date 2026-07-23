@@ -40,7 +40,7 @@ public class Scribe_TestUtil {
     }
 
     public static Scribe_Stage_Requirement__mdt req(String stage, String key, String label,
-            String keywords, String subject, Integer due, Integer sort) {
+            String keywords, String subject, Integer due, Integer sortOrder) {
         return new Scribe_Stage_Requirement__mdt(
             Stage_Name__c = stage,
             Requirement_Key__c = key,
@@ -48,7 +48,7 @@ public class Scribe_TestUtil {
             Detection_Keywords__c = keywords,
             Reminder_Task_Subject__c = subject,
             Reminder_Due_In_Days__c = due,
-            Sort_Order__c = sort,
+            Sort_Order__c = sortOrder,
             Is_Active__c = true
         );
     }
