@@ -185,9 +185,17 @@ force-app/main/default/
 
 ## Status & known environment notes
 
-- **Metadata, Apex, Flows, LWCs, app, permission sets:** complete; all XML well-formed; SLDS/ESLint static analysis passes.
-- **Apex PMD/SFGE static analysis** was not run in this environment because no Java runtime is installed (`sf code-analyzer` PMD/SFGE engines require Java 11). Run `sf code-analyzer run --target force-app` on a machine with Java to exercise those engines.
-- **Agent bundle:** authored to spec; the local Agent Script language server parses it with zero structural diagnostics. Server-side `sf agent validate` could not complete here because the available orgs' Agent Script compile service returned 422 (one trial org expired). Re-run `sf agent validate authoring-bundle --api-name Scribe_Agent` against a healthy Agentforce org to confirm, then publish/activate.
+**Deployed and verified** to a Developer Edition org (`imperialealex@gmail.com`): all objects, the stage-requirement type **and its 13 seed records**, 16 Apex classes, 5 Flows, 3 LWCs, 2 flexipages, 4 tabs, the Scribe app, both permission sets (assigned), and the `Scribe_Agent` AiAuthoringBundle. **All 20 Apex tests pass at 94% coverage of the exercised classes.**
+
+Two org-specific deployment notes, already handled in this repo:
+
+- **Task fields live on `Activity`.** `Scribe_Generated__c` and `Scribe_Source_Call_Log__c` are defined under `objects/Activity/` (Task is a sub-type of Activity, so a field placed directly on Task is rejected). They still surface on Task as `Task.Scribe_Generated__c` etc.
+- **Seed CMT records deploy via the Apex Metadata API.** This org returns an `UNKNOWN_EXCEPTION` gack when deploying custom-metadata *records* through the Metadata API (reproducible even with a single minimal record — an org/platform issue, not the files). The 13 rows were loaded with `Metadata.Operations.enqueueDeployment` instead; on a healthy org `sf project deploy start` handles them normally.
+
+Remaining, environment-limited:
+
+- **Apex PMD/SFGE static analysis** was not run here because no Java runtime is installed (`sf code-analyzer` PMD/SFGE engines require Java 11). SLDS/ESLint analysis passes. Run `sf code-analyzer run --target force-app` on a machine with Java to exercise the Apex engines.
+- **Agent publish/activate:** the bundle deploys cleanly, but `sf agent validate`/`preview` (the `afscript/v2/parseandcompile` reasoner endpoint) returned 422 across every available org — a service-side issue independent of the bundle. Re-run `sf agent validate authoring-bundle --api-name Scribe_Agent` when that service is reachable, then `sf agent publish` / `sf agent activate`.
 
 ## License
 
