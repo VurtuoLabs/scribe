@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Objections__c</fullName>
+    <label>Objections Raised</label>
+    <type>LongTextArea</type>
+    <length>32768</length>
+    <visibleLines>4</visibleLines>
+    <description>Objections or concerns raised on the call, as extracted from the recap. Blank when none were mentioned.</description>
+</CustomField>

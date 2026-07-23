@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Scribe Agent User</label>
+    <description>Write access to Opportunity, Task, Contact, Call Log and Change Log for Scribe's integration/running user, scoped to what the agent needs.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <classAccesses><apexClass>Scribe_Constants</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>Scribe_CallParse</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>Scribe_Util</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>Scribe_ExtractionService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>Scribe_ChangeLogService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>Scribe_LogCallInvocable</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>Scribe_UpdateOpportunityInvocable</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>Scribe_CreateTasksInvocable</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>Scribe_CheckStageRequirementsInvocable</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>Scribe_DetectNewContactsInvocable</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>Scribe_ChangeLogConsoleController</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>Scribe_HomeDashboardController</apexClass><enabled>true</enabled></classAccesses>
+    <applicationVisibilities><application>Scribe</application><visible>true</visible></applicationVisibilities>
+    <flowAccesses><flow>Scribe_Log_Call</flow><enabled>true</enabled></flowAccesses>
+    <flowAccesses><flow>Scribe_Update_Opportunity</flow><enabled>true</enabled></flowAccesses>
+    <flowAccesses><flow>Scribe_Create_Followup_Tasks</flow><enabled>true</enabled></flowAccesses>
+    <flowAccesses><flow>Scribe_Check_Stage_Requirements</flow><enabled>true</enabled></flowAccesses>
+    <flowAccesses><flow>Scribe_Detect_New_Contacts</flow><enabled>true</enabled></flowAccesses>
+    <objectPermissions><object>Scribe_Call_Log__c</object><allowRead>true</allowRead><allowCreate>true</allowCreate><allowEdit>true</allowEdit><allowDelete>false</allowDelete><viewAllRecords>true</viewAllRecords><modifyAllRecords>false</modifyAllRecords></objectPermissions>
+    <objectPermissions><object>Scribe_Change_Log__c</object><allowRead>true</allowRead><allowCreate>true</allowCreate><allowEdit>true</allowEdit><allowDelete>false</allowDelete><viewAllRecords>true</viewAllRecords><modifyAllRecords>false</modifyAllRecords></objectPermissions>
+    <objectPermissions><object>Opportunity</object><allowRead>true</allowRead><allowCreate>true</allowCreate><allowEdit>true</allowEdit><allowDelete>false</allowDelete><viewAllRecords>false</viewAllRecords><modifyAllRecords>false</modifyAllRecords></objectPermissions>
+    <objectPermissions><object>Task</object><allowRead>true</allowRead><allowCreate>true</allowCreate><allowEdit>true</allowEdit><allowDelete>false</allowDelete><viewAllRecords>false</viewAllRecords><modifyAllRecords>false</modifyAllRecords></objectPermissions>
+    <objectPermissions><object>Contact</object><allowRead>true</allowRead><allowCreate>true</allowCreate><allowEdit>true</allowEdit><allowDelete>false</allowDelete><viewAllRecords>false</viewAllRecords><modifyAllRecords>false</modifyAllRecords></objectPermissions>
+    <fieldPermissions><field>Scribe_Call_Log__c.Opportunity__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Call_Log__c.Call_Summary__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Call_Log__c.Call_Date__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Call_Log__c.Logged_By_Rep__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Call_Log__c.Source_Channel__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Call_Log__c.Sentiment__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Call_Log__c.Objections__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Call_Log__c.Stage_At_Log__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Call_Log__c.Extraction_JSON__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Change_Log__c.Related_Record_Id__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Change_Log__c.Related_Record_Name__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Change_Log__c.Object_API_Name__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Change_Log__c.Change_Type__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Change_Log__c.Field_Name__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Change_Log__c.Old_Value__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Change_Log__c.New_Value__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Change_Log__c.Source_Call_Log__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Change_Log__c.Created_By_Rep__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Scribe_Change_Log__c.Rep_Confirmed__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Task.Scribe_Generated__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Task.Scribe_Source_Call_Log__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Contact.Scribe_Generated__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Contact.Scribe_Source_Call_Log__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <tabSettings><tab>Scribe_Home</tab><visibility>Visible</visibility></tabSettings>
+    <tabSettings><tab>Scribe_Change_Log</tab><visibility>Visible</visibility></tabSettings>
+    <tabSettings><tab>Scribe_Change_Log__c</tab><visibility>Visible</visibility></tabSettings>
+    <tabSettings><tab>Scribe_Call_Log__c</tab><visibility>Visible</visibility></tabSettings>
+</PermissionSet>

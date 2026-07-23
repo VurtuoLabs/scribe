@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>The raw call recap/transcript the rep provided, plus a link to the Opportunity. Permanent audit trail of what Scribe was working from and the source every change-log entry traces back to.</description>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <label>Scribe Call Log</label>
+    <nameField>
+        <displayFormat>CALL-{00000}</displayFormat>
+        <label>Call Log Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Scribe Call Logs</pluralLabel>
+    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+</CustomObject>
