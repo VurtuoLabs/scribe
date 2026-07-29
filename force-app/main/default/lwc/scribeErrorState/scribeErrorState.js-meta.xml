@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <isExposed>false</isExposed>
+    <masterLabel>Scribe Error State</masterLabel>
+    <description>Shared error state: a plain-language message with a retry action, keeping the raw Apex/JS error collapsed behind "Technical details" for developers.</description>
+</LightningComponentBundle>

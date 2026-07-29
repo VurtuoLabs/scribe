@@ -1,31 +1,173 @@
 <template>
-    <template if:true={hasChanges}>
-        <div class="slds-box slds-box_x-small slds-theme_shade">
-            <div class="slds-grid slds-grid_vertical-align-center slds-grid_align-spread">
-                <div class="slds-grid slds-grid_vertical-align-center">
-                    <lightning-icon icon-name="custom:custom18" size="x-small"
-                        class="slds-m-right_x-small"></lightning-icon>
-                    <span class="slds-text-body_regular">{badgeLabel}</span>
-                </div>
-                <lightning-button variant="base" label={toggleLabel} onclick={toggle}></lightning-button>
+    <div class="card">
+        <!-- Loading: two lines in the same box the summary will occupy. -->
+        <template if:true={isLoading}>
+            <div class="card__skeleton">
+                <c-scribe-skeleton-loader
+                    variant="text"
+                    lines="2"
+                    label="Checking what Scribe changed on this record"
+                ></c-scribe-skeleton-loader>
             </div>
+        </template>
 
-            <template if:true={expanded}>
-                <ul class="slds-has-dividers_bottom-space slds-p-top_x-small">
-                    <template for:each={rows} for:item="row">
-                        <li key={row.id} class="slds-item">
-                            <div class="slds-text-body_small">{row.title}</div>
-                            <div class="slds-grid slds-grid_align-spread">
-                                <span class="slds-text-body_small slds-text-color_weak">{row.meta}</span>
-                                <template if:true={row.callLogId}>
-                                    <a data-id={row.callLogId} onclick={openCall}
-                                        class="slds-text-body_small">View source call</a>
-                                </template>
-                            </div>
-                        </li>
-                    </template>
-                </ul>
+        <template if:false={isLoading}>
+            <template if:true={error}>
+                <c-scribe-error-state
+                    variant="inline"
+                    heading="Scribe history unavailable"
+                    message={error.message}
+                    detail={error.detail}
+                    retrying={isRefreshing}
+                    onretry={handleRetry}
+                ></c-scribe-error-state>
             </template>
-        </div>
-    </template>
+
+            <template if:false={error}>
+                <!-- Nothing to show: one quiet line, never a blank card. -->
+                <template if:false={hasChanges}>
+                    <c-scribe-empty-state
+                        variant="inline"
+                        icon-name="utility:note"
+                        heading="Scribe hasn't changed this record."
+                        message="Anything it writes here will be listed with its before and after values."
+                    ></c-scribe-empty-state>
+                </template>
+
+                <template if:true={hasChanges}>
+                    <div class="card__head">
+                        <span class="card__mark">
+                            <lightning-icon icon-name="utility:edit" size="x-small"></lightning-icon>
+                        </span>
+                        <div class="card__copy">
+                            <p class="eyebrow">Scribe · record history</p>
+                            <h2 class="card__title">{badgeLabel}</h2>
+                        </div>
+                        <lightning-button-icon
+                            class="card__refresh"
+                            icon-name="utility:refresh"
+                            variant="bare"
+                            size="small"
+                            alternative-text={refreshLabel}
+                            title={refreshLabel}
+                            disabled={isRefreshing}
+                            onclick={handleRetry}
+                        ></lightning-button-icon>
+                    </div>
+
+                    <!-- The latest write stays visible: it is what a reader needs first. -->
+                    <template if:true={latest}>
+                        <div class="latest">
+                            <div class="latest__top">
+                                <c-scribe-status-badge
+                                    label={latest.typeLabel}
+                                    tone={latest.typeTone}
+                                    icon-name={latest.typeIcon}
+                                ></c-scribe-status-badge>
+                                <c-scribe-status-badge
+                                    label={latest.confirmedLabel}
+                                    tone={latest.confirmedTone}
+                                    icon-name={latest.confirmedIcon}
+                                    tooltip={latest.confirmedTooltip}
+                                ></c-scribe-status-badge>
+                                <span class="latest__time">{latest.relative}</span>
+                            </div>
+                            <p class="latest__headline">{latest.headline}</p>
+                            <template if:true={latest.isDiff}>
+                                <p class="diff">
+                                    <span class="slds-assistive-text">{latest.diffAssistive}</span>
+                                    <span class="diff__old" aria-hidden="true">{latest.oldValue}</span>
+                                    <lightning-icon
+                                        icon-name="utility:forward"
+                                        size="xx-small"
+                                        class="diff__arrow"
+                                    ></lightning-icon>
+                                    <span class="diff__new" aria-hidden="true">{latest.newValue}</span>
+                                </p>
+                            </template>
+                            <p class="latest__meta">
+                                <span>{latest.meta}</span>
+                                <template if:true={latest.callLogId}>
+                                    <a
+                                        href={latest.callUrl}
+                                        data-id={latest.callLogId}
+                                        onclick={handleOpenCall}
+                                        >{latest.callLabel}</a
+                                    >
+                                </template>
+                            </p>
+                        </div>
+                    </template>
+
+                    <template if:true={hasMore}>
+                        <div class="card__toggle">
+                            <lightning-button
+                                variant="base"
+                                label={toggleLabel}
+                                icon-name={toggleIcon}
+                                icon-position="right"
+                                aria-expanded={expandedAttr}
+                                onclick={toggle}
+                            ></lightning-button>
+                        </div>
+
+                        <template if:true={expanded}>
+                            <ul class="history reveal">
+                                <template for:each={olderRows} for:item="row">
+                                    <li key={row.id} class="history__item">
+                                        <span class="history__rail" aria-hidden="true">
+                                            <span class={row.dotClass}></span>
+                                        </span>
+                                        <div class="history__body">
+                                            <div class="history__top">
+                                                <c-scribe-status-badge
+                                                    label={row.typeLabel}
+                                                    tone={row.typeTone}
+                                                    icon-name={row.typeIcon}
+                                                ></c-scribe-status-badge>
+                                                <span class="history__time">{row.relative}</span>
+                                            </div>
+                                            <p class="history__headline">{row.headline}</p>
+                                            <template if:true={row.isDiff}>
+                                                <p class="diff diff_compact">
+                                                    <span class="slds-assistive-text"
+                                                        >{row.diffAssistive}</span
+                                                    >
+                                                    <span class="diff__old" aria-hidden="true"
+                                                        >{row.oldValue}</span
+                                                    >
+                                                    <lightning-icon
+                                                        icon-name="utility:forward"
+                                                        size="xx-small"
+                                                        class="diff__arrow"
+                                                    ></lightning-icon>
+                                                    <span class="diff__new" aria-hidden="true"
+                                                        >{row.newValue}</span
+                                                    >
+                                                </p>
+                                            </template>
+                                            <p class="history__meta">
+                                                <span>{row.meta}</span>
+                                                <template if:true={row.callLogId}>
+                                                    <a
+                                                        href={row.callUrl}
+                                                        data-id={row.callLogId}
+                                                        onclick={handleOpenCall}
+                                                        >{row.callLabel}</a
+                                                    >
+                                                </template>
+                                            </p>
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
+                            <template if:true={isTruncated}>
+                                <p class="history__note">{truncationNote}</p>
+                            </template>
+                        </template>
+                    </template>
+                </template>
+            </template>
+        </template>
+    </div>
 </template>

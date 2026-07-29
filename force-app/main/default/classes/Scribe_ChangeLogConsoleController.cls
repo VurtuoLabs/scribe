@@ -18,9 +18,16 @@ public with sharing class Scribe_ChangeLogConsoleController {
         @AuraEnabled public String repName;
         @AuraEnabled public Id sourceCallLogId;
         @AuraEnabled public String sourceCallLogName;
+        // Truncated excerpt of the recap this change came from, so the console can
+        // show what Scribe heard beside what it wrote without a second round trip.
+        @AuraEnabled public String sourceCallSummary;
         @AuraEnabled public Boolean repConfirmed;
         @AuraEnabled public Datetime createdDate;
     }
+
+    // Recaps are long text; only an excerpt travels to the client. The full text
+    // stays one click away on the call-log record.
+    private static final Integer SUMMARY_PREVIEW_LENGTH = 600;
 
     public class FilterOptions {
         @AuraEnabled public List<Map<String, String>> reps = new List<Map<String, String>>();
@@ -37,6 +44,7 @@ public with sharing class Scribe_ChangeLogConsoleController {
             'SELECT Id, Name, Change_Type__c, Object_API_Name__c, Related_Record_Id__c, ' +
             'Related_Record_Name__c, Field_Name__c, Old_Value__c, New_Value__c, ' +
             'Created_By_Rep__r.Name, Source_Call_Log__c, Source_Call_Log__r.Name, ' +
+            'Source_Call_Log__r.Call_Summary__c, ' +
             'Rep_Confirmed__c, CreatedDate FROM Scribe_Change_Log__c';
 
         List<String> clauses = new List<String>();
@@ -67,7 +75,7 @@ public with sharing class Scribe_ChangeLogConsoleController {
             SELECT Id, Name, Change_Type__c, Object_API_Name__c, Related_Record_Id__c,
                    Related_Record_Name__c, Field_Name__c, Old_Value__c, New_Value__c,
                    Created_By_Rep__r.Name, Source_Call_Log__c, Source_Call_Log__r.Name,
-                   Rep_Confirmed__c, CreatedDate
+                   Source_Call_Log__r.Call_Summary__c, Rep_Confirmed__c, CreatedDate
             FROM Scribe_Change_Log__c
             WHERE Related_Record_Id__c = :recordId
             ORDER BY CreatedDate DESC LIMIT 200
@@ -124,8 +132,18 @@ public with sharing class Scribe_ChangeLogConsoleController {
         row.repName = c.Created_By_Rep__r.Name;
         row.sourceCallLogId = c.Source_Call_Log__c;
         row.sourceCallLogName = c.Source_Call_Log__r.Name;
+        row.sourceCallSummary = excerpt(
+            c.Source_Call_Log__c == null ? null : c.Source_Call_Log__r.Call_Summary__c);
         row.repConfirmed = c.Rep_Confirmed__c;
         row.createdDate = c.CreatedDate;
         return row;
+    }
+
+    private static String excerpt(String text) {
+        if (String.isBlank(text)) { return null; }
+        String clean = text.trim();
+        return clean.length() <= SUMMARY_PREVIEW_LENGTH
+            ? clean
+            : clean.substring(0, SUMMARY_PREVIEW_LENGTH).trim() + '...';
     }
 }

@@ -1,0 +1,88 @@
+:host {
+    display: block;
+}
+
+.es {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+    padding: 2rem 1.5rem;
+    border-radius: var(--scribe-radius-lg, 1rem);
+    background: var(--scribe-surface-sunk, #fbf6f4);
+    animation: scribe-fade-in 200ms ease-out both;
+}
+
+.es__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--scribe-accent-soft, #fdf2f6);
+    --slds-c-icon-color-foreground-default: var(--scribe-accent, #9f1239);
+}
+
+.es__copy {
+    max-width: 28rem;
+}
+
+.es__heading {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--scribe-ink, #2b1b21);
+    line-height: 1.4;
+}
+
+.es__message {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    line-height: var(--scribe-leading, 1.6);
+    color: var(--scribe-ink-muted, #6d5661);
+}
+
+/* --- Inline variant: a quiet single line, for record-page contexts where a
+   full empty card would be noise. */
+.es_inline {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    background: transparent;
+}
+
+.es_inline .es__mark {
+    width: 1.5rem;
+    height: 1.5rem;
+    background: var(--scribe-accent-soft, #fdf2f6);
+}
+
+.es_inline .es__heading {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--scribe-ink-muted, #6d5661);
+}
+
+.es_inline .es__message {
+    margin-top: 0;
+}
+
+@keyframes scribe-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.25rem);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .es {
+        animation: none;
+    }
+}

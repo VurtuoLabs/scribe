@@ -1,63 +1,423 @@
 <template>
-    <lightning-card title="Scribe Change Log" icon-name="custom:custom18">
-        <span slot="actions" class="slds-text-body_small slds-text-color_weak">{rowCountLabel}</span>
-
-        <div class="slds-p-horizontal_medium slds-p-bottom_small">
-            <div class="slds-grid slds-gutters slds-wrap slds-grid_vertical-align-end">
-                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
-                    <lightning-combobox label="Rep" value={repFilter} options={repOptions}
-                        onchange={handleRep}></lightning-combobox>
-                </div>
-                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
-                    <lightning-combobox label="Object" value={objectFilter} options={objectOptions}
-                        onchange={handleObject}></lightning-combobox>
-                </div>
-                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
-                    <lightning-combobox label="Change Type" value={typeFilter} options={typeOptions}
-                        onchange={handleType}></lightning-combobox>
-                </div>
-                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
-                    <lightning-input type="date" label="From" value={startDate}
-                        onchange={handleStart}></lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-5">
-                    <lightning-input type="date" label="To" value={endDate}
-                        onchange={handleEnd}></lightning-input>
-                </div>
+    <div class="scribe">
+        <!-- ── Masthead ───────────────────────────────────────────────────── -->
+        <header class="masthead">
+            <div class="masthead__copy">
+                <p class="eyebrow">Scribe · change log</p>
+                <h1 class="masthead__title">Everything Scribe wrote</h1>
+                <p class="masthead__sub">
+                    Grouped by the call each write came from, so you can read what Scribe heard next to what
+                    it put on the record.
+                </p>
             </div>
-            <div class="slds-p-top_x-small">
-                <lightning-button label="Reset filters" onclick={handleReset}
-                    variant="neutral"></lightning-button>
+            <div class="masthead__actions">
+                <p class="masthead__stamp" aria-live="polite">{lastUpdatedLabel}</p>
+                <lightning-button
+                    label={refreshLabel}
+                    icon-name="utility:refresh"
+                    variant="neutral"
+                    disabled={isBusy}
+                    onclick={handleRefresh}
+                ></lightning-button>
             </div>
-        </div>
+        </header>
 
-        <template if:true={isLoading}>
-            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
-        </template>
+        <!-- ── Filters ────────────────────────────────────────────────────── -->
+        <section class="panel">
+            <c-scribe-section-header
+                title="Narrow the log"
+                description="Rep, object, change type and date range are applied by the server; search and confirmation are applied to what is already loaded."
+                icon-name="utility:filterList"
+                count-label={resultCountLabel}
+                collapsible
+                expanded={filtersExpanded}
+                ontoggle={handleFiltersToggle}
+            >
+                <lightning-button
+                    slot="actions"
+                    label="Reset filters"
+                    icon-name="utility:undo"
+                    variant="neutral"
+                    disabled={isResetDisabled}
+                    onclick={handleReset}
+                ></lightning-button>
+            </c-scribe-section-header>
 
-        <template if:true={error}>
-            <div class="slds-p-horizontal_medium slds-text-color_error" role="alert">{error}</div>
-        </template>
+            <template if:true={filtersExpanded}>
+                <div class="panel__body reveal">
+                    <div class="filters">
+                        <div class="filters__cell filters__cell_wide">
+                            <lightning-input
+                                type="search"
+                                label="Search loaded changes"
+                                placeholder="Record, field, value or rep"
+                                value={searchTerm}
+                                onchange={handleSearch}
+                            ></lightning-input>
+                        </div>
+                        <div class="filters__cell">
+                            <lightning-combobox
+                                label="Rep"
+                                value={repFilter}
+                                options={repOptions}
+                                onchange={handleRep}
+                            ></lightning-combobox>
+                        </div>
+                        <div class="filters__cell">
+                            <lightning-combobox
+                                label="Object"
+                                value={objectFilter}
+                                options={objectOptions}
+                                onchange={handleObject}
+                            ></lightning-combobox>
+                        </div>
+                        <div class="filters__cell">
+                            <lightning-combobox
+                                label="Change type"
+                                value={typeFilter}
+                                options={typeOptions}
+                                onchange={handleType}
+                            ></lightning-combobox>
+                        </div>
+                        <div class="filters__cell">
+                            <lightning-combobox
+                                label="Confirmation"
+                                value={confirmFilter}
+                                options={confirmOptions}
+                                onchange={handleConfirm}
+                            ></lightning-combobox>
+                        </div>
+                        <div class="filters__cell">
+                            <lightning-input
+                                type="date"
+                                label="From"
+                                value={startDate}
+                                max={endDate}
+                                message-when-bad-input="Enter a date on or before the To date."
+                                onchange={handleStart}
+                            ></lightning-input>
+                        </div>
+                        <div class="filters__cell">
+                            <lightning-input
+                                type="date"
+                                label="To"
+                                value={endDate}
+                                min={startDate}
+                                message-when-bad-input="Enter a date on or after the From date."
+                                onchange={handleEnd}
+                            ></lightning-input>
+                        </div>
+                    </div>
 
-        <template if:true={hasRows}>
-            <div class="slds-p-horizontal_x-small" style="min-height: 8rem;">
-                <lightning-datatable
-                    key-field="id"
-                    data={rows}
-                    columns={columns}
-                    hide-checkbox-column
-                    onrowaction={handleRowAction}
-                    column-widths-mode="auto">
-                </lightning-datatable>
-            </div>
-        </template>
+                    <template if:true={dateRangeInvalid}>
+                        <p class="filters__error" role="alert">
+                            The From date is after the To date, so nothing can match. Swap them or clear one.
+                        </p>
+                    </template>
 
-        <template if:false={hasRows}>
-            <template if:false={isLoading}>
-                <div class="slds-p-around_large slds-align_absolute-center slds-text-color_weak">
-                    No changes match these filters yet.
+                    <p class="filters__summary">{filterSummary}</p>
                 </div>
             </template>
-        </template>
-    </lightning-card>
+        </section>
+
+        <!-- ── The log ────────────────────────────────────────────────────── -->
+        <section class="panel log slds-is-relative">
+            <c-scribe-section-header
+                title="The log"
+                description={viewDescription}
+                icon-name="utility:richtextbulletedlist"
+                count-label={loadedCountLabel}
+            >
+                <div slot="actions" class="viewtoggle" role="group" aria-label="Change the log layout">
+                    <template for:each={viewOptions} for:item="option">
+                        <button
+                            key={option.value}
+                            type="button"
+                            class={option.class}
+                            data-value={option.value}
+                            aria-pressed={option.pressed}
+                            onclick={handleViewChange}
+                        >
+                            <lightning-icon icon-name={option.icon} size="xx-small"></lightning-icon>
+                            <span>{option.label}</span>
+                        </button>
+                    </template>
+                </div>
+            </c-scribe-section-header>
+
+            <!-- Short refresh: spinner over the content that is already there. -->
+            <template if:true={isRefreshing}>
+                <lightning-spinner
+                    alternative-text="Refreshing the change log"
+                    size="small"
+                ></lightning-spinner>
+            </template>
+
+            <!-- Long fetch of another page of history. -->
+            <template if:true={isLoadingMore}>
+                <div class="progress">
+                    <lightning-progress-bar
+                        value={loadProgress}
+                        size="small"
+                        variant="circular"
+                    ></lightning-progress-bar>
+                    <p class="progress__label">{loadMoreProgressLabel}</p>
+                </div>
+            </template>
+
+            <div class="panel__body">
+                <!-- Initial load: transcript-shaped skeleton, same box as the content. -->
+                <template if:true={isLoading}>
+                    <c-scribe-skeleton-loader
+                        variant="transcript"
+                        rows="2"
+                        label="Loading the change log"
+                    ></c-scribe-skeleton-loader>
+                </template>
+
+                <template if:false={isLoading}>
+                    <template if:true={error}>
+                        <c-scribe-error-state
+                            heading="The change log didn't load"
+                            message={error.message}
+                            detail={error.detail}
+                            retrying={isRefreshing}
+                            onretry={handleRetry}
+                        ></c-scribe-error-state>
+                    </template>
+
+                    <template if:false={error}>
+                        <template if:true={isEmpty}>
+                            <c-scribe-empty-state
+                                icon-name={emptyIcon}
+                                heading={emptyHeading}
+                                message={emptyMessage}
+                                action-label={emptyAction}
+                                action-icon-name={emptyActionIcon}
+                                onaction={handleEmptyAction}
+                            ></c-scribe-empty-state>
+                        </template>
+
+                        <template if:false={isEmpty}>
+                            <!-- ── Transcript view (default) ──────────────── -->
+                            <template if:true={isTranscriptView}>
+                                <div class="calls reveal">
+                                    <template for:each={pagedGroups} for:item="group">
+                                        <article key={group.key} class="call">
+                                            <header class="call__head">
+                                                <div class="call__id">
+                                                    <h3 class="call__title">
+                                                        <template if:true={group.callId}>
+                                                            <a
+                                                                href={group.callUrl}
+                                                                data-id={group.callId}
+                                                                onclick={handleOpenRecord}
+                                                                >{group.callName}</a
+                                                            >
+                                                        </template>
+                                                        <template if:false={group.callId}>
+                                                            <span>{group.callName}</span>
+                                                        </template>
+                                                    </h3>
+                                                    <p class="call__meta">{group.meta}</p>
+                                                </div>
+                                                <div class="call__tags">
+                                                    <c-scribe-status-badge
+                                                        label={group.writeCountLabel}
+                                                        tone="neutral"
+                                                        hide-icon
+                                                    ></c-scribe-status-badge>
+                                                    <template if:true={group.hasOverwrites}>
+                                                        <c-scribe-status-badge
+                                                            label={group.overwriteLabel}
+                                                            tone="accent"
+                                                            icon-name="utility:edit"
+                                                            tooltip="Writes in this call replaced a value someone had already entered."
+                                                        ></c-scribe-status-badge>
+                                                    </template>
+                                                </div>
+                                            </header>
+
+                                            <div class="call__body">
+                                                <div class="col col_heard">
+                                                    <h4 class="col__label">What Scribe heard</h4>
+                                                    <template if:true={group.summary}>
+                                                        <blockquote class="recap">{group.summary}</blockquote>
+                                                    </template>
+                                                    <template if:false={group.summary}>
+                                                        <p class="recap recap_missing">
+                                                            No recap text is stored on this call log.
+                                                        </p>
+                                                    </template>
+                                                    <template if:true={group.callId}>
+                                                        <p class="col__link">
+                                                            <a
+                                                                href={group.callUrl}
+                                                                data-id={group.callId}
+                                                                onclick={handleOpenRecord}
+                                                                >Read the full recap</a
+                                                            >
+                                                        </p>
+                                                    </template>
+                                                </div>
+
+                                                <div class="col col_wrote">
+                                                    <h4 class="col__label">What Scribe wrote</h4>
+                                                    <ul class="writes">
+                                                        <template for:each={group.entries} for:item="write">
+                                                            <li key={write.id} class="write">
+                                                                <div class="write__top">
+                                                                    <c-scribe-status-badge
+                                                                        label={write.typeLabel}
+                                                                        tone={write.typeTone}
+                                                                        icon-name={write.typeIcon}
+                                                                    ></c-scribe-status-badge>
+                                                                    <c-scribe-status-badge
+                                                                        label={write.confirmedLabel}
+                                                                        tone={write.confirmedTone}
+                                                                        icon-name={write.confirmedIcon}
+                                                                        tooltip={write.confirmedTooltip}
+                                                                    ></c-scribe-status-badge>
+                                                                    <span class="write__time"
+                                                                        >{write.when}</span
+                                                                    >
+                                                                    <lightning-button-menu
+                                                                        class="write__menu"
+                                                                        icon-size="x-small"
+                                                                        menu-alignment="auto"
+                                                                        variant="bare"
+                                                                        alternative-text={write.menuLabel}
+                                                                        title={write.menuLabel}
+                                                                        data-record={write.relatedRecordId}
+                                                                        data-call={write.callLogId}
+                                                                        onselect={handleRowMenu}
+                                                                    >
+                                                                        <lightning-menu-item
+                                                                            value="open_record"
+                                                                            label="Open changed record"
+                                                                            disabled={write.noRecord}
+                                                                        ></lightning-menu-item>
+                                                                        <lightning-menu-item
+                                                                            value="open_call"
+                                                                            label="Open source call"
+                                                                            disabled={write.noCall}
+                                                                        ></lightning-menu-item>
+                                                                    </lightning-button-menu>
+                                                                </div>
+
+                                                                <p class="write__headline">
+                                                                    {write.headline}
+                                                                </p>
+
+                                                                <template if:true={write.isDiff}>
+                                                                    <p class="diff">
+                                                                        <span class="slds-assistive-text"
+                                                                            >{write.diffAssistive}</span
+                                                                        >
+                                                                        <span
+                                                                            class="diff__old"
+                                                                            aria-hidden="true"
+                                                                            >{write.oldValue}</span
+                                                                        >
+                                                                        <lightning-icon
+                                                                            icon-name="utility:forward"
+                                                                            size="xx-small"
+                                                                            class="diff__arrow"
+                                                                        ></lightning-icon>
+                                                                        <span
+                                                                            class="diff__new"
+                                                                            aria-hidden="true"
+                                                                            >{write.newValue}</span
+                                                                        >
+                                                                    </p>
+                                                                </template>
+
+                                                                <p class="write__meta">
+                                                                    <template if:true={write.relatedRecordId}>
+                                                                        <a
+                                                                            href={write.recordUrl}
+                                                                            data-id={write.relatedRecordId}
+                                                                            onclick={handleOpenRecord}
+                                                                            >{write.recordLabel}</a
+                                                                        >
+                                                                    </template>
+                                                                    <template
+                                                                        if:false={write.relatedRecordId}
+                                                                    >
+                                                                        <span>{write.recordLabel}</span>
+                                                                    </template>
+                                                                    <span>{write.name}</span>
+                                                                </p>
+                                                            </li>
+                                                        </template>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    </template>
+                                </div>
+
+                                <!-- Pagination keeps the DOM small on big audit trails. -->
+                                <template if:true={showPager}>
+                                    <div class="pager">
+                                        <lightning-button
+                                            label="Previous"
+                                            icon-name="utility:chevronleft"
+                                            variant="neutral"
+                                            disabled={isFirstPage}
+                                            onclick={handlePrevPage}
+                                        ></lightning-button>
+                                        <p class="pager__label" aria-live="polite">{pagerLabel}</p>
+                                        <lightning-button
+                                            label="Next"
+                                            icon-name="utility:chevronright"
+                                            icon-position="right"
+                                            variant="neutral"
+                                            disabled={isLastPage}
+                                            onclick={handleNextPage}
+                                        ></lightning-button>
+                                    </div>
+                                </template>
+                            </template>
+
+                            <!-- ── Table view ─────────────────────────────── -->
+                            <template if:false={isTranscriptView}>
+                                <div class="table reveal">
+                                    <lightning-datatable
+                                        key-field="id"
+                                        data={visibleRows}
+                                        columns={columns}
+                                        hide-checkbox-column
+                                        sorted-by={sortedBy}
+                                        sorted-direction={sortedDirection}
+                                        onsort={handleSort}
+                                        onrowaction={handleRowAction}
+                                        column-widths-mode="auto"
+                                    ></lightning-datatable>
+                                </div>
+                            </template>
+                        </template>
+                    </template>
+                </template>
+            </div>
+
+            <!-- Coverage + load more: always visible, never hidden in a menu. -->
+            <template if:false={isLoading}>
+                <template if:false={error}>
+                    <footer class="coverage">
+                        <p class="coverage__label">{coverageLabel}</p>
+                        <template if:true={canLoadMore}>
+                            <lightning-button
+                                label={loadMoreLabel}
+                                icon-name="utility:down"
+                                variant="brand-outline"
+                                disabled={isBusy}
+                                onclick={handleLoadMore}
+                            ></lightning-button>
+                        </template>
+                    </footer>
+                </template>
+            </template>
+        </section>
+    </div>
 </template>

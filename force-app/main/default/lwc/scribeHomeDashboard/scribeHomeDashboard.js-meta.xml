@@ -3,7 +3,7 @@
     <apiVersion>65.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Scribe Home Dashboard</masterLabel>
-    <description>Summary tiles and a 7-day trend of everything Scribe has changed, off the change log.</description>
+    <description>Scribe home: KPI cards led by how many existing field values Scribe overwrote, a change-type breakdown, a 7-day trend, the latest audit entries as a timeline, and per-rep / per-object rollups. Includes skeleton loading, empty and error states.</description>
     <targets>
         <target>lightning__AppPage</target>
         <target>lightning__HomePage</target>

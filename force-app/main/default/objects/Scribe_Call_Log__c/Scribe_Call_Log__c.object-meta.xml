@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <!--
+      Assigns Scribe_Call_Log_Record_Page as the org-default Lightning record page
+      for this object. This is how "org default record page" is expressed in
+      metadata: an ActionOverride on the View action with type Flexipage. Without
+      it the flexipage exists but no user ever lands on it.
+    -->
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Scribe: org-default Lightning record page.</comment>
+        <content>Scribe_Call_Log_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <compactLayoutAssignment>Scribe_Call_Log_Compact</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>The raw call recap/transcript the rep provided, plus a link to the Opportunity. Permanent audit trail of what Scribe was working from and the source every change-log entry traces back to.</description>
     <enableActivities>true</enableActivities>

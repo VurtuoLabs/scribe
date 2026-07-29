@@ -1,6 +1,447 @@
-.scribe-bar {
-    height: var(--slds-g-spacing-3, 0.75rem);
-    border-radius: var(--slds-g-radius-border-2, 0.75rem);
-    background: var(--slds-g-color-accent-container-1, #1b96ff);
-    transition: width 0.3s ease;
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Scribe design tokens - "transcript" identity.
+ *
+ * Rose-plum accent on soft warm-white, quiet borders, larger corner radii and
+ * generous line-height, so the app reads like a document rather than a console.
+ * Declared on :host and inherited through the shadow boundary by the nested
+ * Scribe components; each of those also carries the same fallback value so it
+ * still renders correctly on its own.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+:host {
+    --scribe-accent: #9f1239;
+    --scribe-accent-strong: #831843;
+    --scribe-accent-plum: #a21caf;
+    --scribe-accent-soft: #fdf2f6;
+    --scribe-accent-quiet: #f6dfe7;
+    --scribe-surface: #ffffff;
+    --scribe-surface-sunk: #f3f3f3;
+    --scribe-border: #ece0e4;
+    --scribe-ink: #2b1b21;
+    --scribe-ink-muted: #6d5661;
+    --scribe-radius: 0.75rem;
+    --scribe-radius-lg: 1rem;
+    --scribe-leading: 1.6;
+    --scribe-motion: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    display: block;
+    color: var(--scribe-ink);
+}
+
+.scribe {
+    /* One vertical rhythm unit for every major band of the page. */
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: var(--scribe-surface-sunk);
+    border-radius: var(--scribe-radius-lg);
+    overflow-x: hidden;
+}
+
+/* ── Masthead ──────────────────────────────────────────────────────────── */
+.masthead {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--scribe-border);
+}
+
+.eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--scribe-accent);
+}
+
+.masthead__title {
+    margin-top: 0.25rem;
+    font-size: 1.625rem;
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--scribe-ink);
+}
+
+.masthead__sub {
+    margin-top: 0.375rem;
+    max-width: 42rem;
+    font-size: 0.875rem;
+    line-height: var(--scribe-leading);
+    color: var(--scribe-ink-muted);
+}
+
+.masthead__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.masthead__stamp {
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--scribe-ink-muted);
+}
+
+.block {
+    display: block;
+}
+
+/* ── KPI grid ──────────────────────────────────────────────────────────── */
+.kpis {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.875rem;
+}
+
+@media (min-width: 40em) {
+    .kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .kpis__cell_hero,
+    .kpis__cell_half {
+        grid-column: span 2;
+    }
+}
+
+@media (min-width: 64em) {
+    .kpis {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+    .kpis__cell_hero,
+    .kpis__cell_half {
+        grid-column: span 3;
+    }
+    .kpis__cell_third {
+        grid-column: span 2;
+    }
+}
+
+/* Compact 7-day chart, slotted into the volume KPI card. */
+.spark {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.1875rem;
+    height: 2.25rem;
+    margin-top: 0.75rem;
+}
+
+.spark__col {
+    display: flex;
+    align-items: flex-end;
+    flex: 1 1 0;
+    height: 100%;
+}
+
+.spark__bar {
+    display: block;
+    width: 100%;
+    min-height: 0.125rem;
+    border-radius: 0.1875rem 0.1875rem 0 0;
+    background: linear-gradient(180deg, var(--scribe-accent-plum), var(--scribe-accent));
+    transition: height 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.spark__axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+    font-size: 0.6875rem;
+    color: var(--scribe-ink-muted);
+}
+
+/* ── Panels ────────────────────────────────────────────────────────────── */
+.panel {
+    padding: 1.125rem 1.25rem;
+    border: 1px solid var(--scribe-border);
+    border-radius: var(--scribe-radius-lg);
+    background: var(--scribe-surface);
+    box-shadow: 0 1px 2px rgba(43, 27, 33, 0.04);
+}
+
+.panel__body {
+    margin-top: 1rem;
+}
+
+.reveal {
+    animation: scribe-reveal 200ms ease-out both;
+}
+
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* ── Narrative split: the log reads wide, the rollups sit beside it ────── */
+.split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.split__side {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+@media (min-width: 64em) {
+    .split {
+        grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    }
+}
+
+/* ── Entry toolbar ─────────────────────────────────────────────────────── */
+.toolbar {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.toolbar__search {
+    flex: 1 1 14rem;
+    min-width: 0;
+}
+
+.toolbar__sort {
+    flex: 0 1 11rem;
+    min-width: 9rem;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-top: 0.625rem;
+}
+
+.chip {
+    padding: 0.3125rem 0.6875rem;
+    border: 1px solid var(--scribe-border);
+    border-radius: 999px;
+    background: var(--scribe-surface);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--scribe-ink-muted);
+    cursor: pointer;
+    /* Comfortable touch target on a phone, not just a mouse target. */
+    min-height: 2.25rem;
+    transition:
+        background-color var(--scribe-motion),
+        border-color var(--scribe-motion),
+        color var(--scribe-motion);
+}
+
+.chip:hover {
+    border-color: var(--scribe-accent-quiet);
+    color: var(--scribe-accent-strong);
+}
+
+.chip:focus-visible {
+    outline: 2px solid var(--scribe-accent);
+    outline-offset: 2px;
+}
+
+.chip_on {
+    border-color: transparent;
+    background: var(--scribe-accent);
+    color: #fff;
+}
+
+.chip_on:hover {
+    background: var(--scribe-accent-strong);
+    color: #fff;
+}
+
+/* ── Timeline of entries ───────────────────────────────────────────────── */
+.timeline {
+    display: flex;
+    flex-direction: column;
+}
+
+.entry {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.875rem 0;
+    border-top: 1px solid var(--scribe-border);
+}
+
+.entry:first-child {
+    border-top: 0;
+    padding-top: 0.25rem;
+}
+
+.entry__rail {
+    position: relative;
+    flex: 0 0 auto;
+    width: 0.75rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* The rail line links entries into one continuous record. */
+.entry__rail::before {
+    content: '';
+    position: absolute;
+    top: 0.9rem;
+    bottom: -1.4rem;
+    width: 1px;
+    background: var(--scribe-border);
+}
+
+.entry:last-child .entry__rail::before {
+    display: none;
+}
+
+.entry__dot {
+    position: relative;
+    z-index: 1;
+    width: 0.625rem;
+    height: 0.625rem;
+    margin-top: 0.3125rem;
+    border-radius: 50%;
+    background: var(--scribe-ink-muted);
+    box-shadow: 0 0 0 3px var(--scribe-surface);
+}
+
+.entry__dot_accent {
+    background: var(--scribe-accent);
+}
+.entry__dot_plum {
+    background: var(--scribe-accent-plum);
+}
+.entry__dot_info {
+    background: #2b6ca3;
+}
+.entry__dot_warning {
+    background: #014486;
+}
+
+.entry__body {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.entry__top {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+}
+
+.entry__time {
+    margin-left: auto;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    color: var(--scribe-ink-muted);
+}
+
+.entry__headline {
+    margin-top: 0.375rem;
+    font-size: 0.9375rem;
+    line-height: var(--scribe-leading);
+    color: var(--scribe-ink);
+    overflow-wrap: anywhere;
+}
+
+.entry__meta {
+    margin-top: 0.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--scribe-ink-muted);
+}
+
+.entry__meta a {
+    color: var(--scribe-accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--scribe-accent-quiet);
+    transition: border-color var(--scribe-motion);
+}
+
+.entry__meta a:hover,
+.entry__meta a:focus {
+    border-color: var(--scribe-accent);
+}
+
+.entry__meta a:focus-visible {
+    outline: 2px solid var(--scribe-accent);
+    outline-offset: 2px;
+}
+
+/* ── The before → after diff: the decision-critical detail of a row ────── */
+.diff {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.625rem;
+    border-radius: var(--scribe-radius);
+    background: var(--scribe-accent-soft);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.diff__old {
+    color: var(--scribe-ink-muted);
+    text-decoration: line-through;
+    overflow-wrap: anywhere;
+}
+
+.diff__new {
+    font-weight: 600;
+    color: var(--scribe-accent-strong);
+    overflow-wrap: anywhere;
+}
+
+.diff__arrow {
+    --slds-c-icon-color-foreground-default: var(--scribe-accent);
+}
+
+@media (max-width: 30em) {
+    .scribe {
+        padding: 0.75rem;
+        gap: 1rem;
+    }
+    .panel {
+        padding: 1rem;
+    }
+    .masthead__title {
+        font-size: 1.375rem;
+    }
+    .masthead__actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+@keyframes scribe-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(-0.25rem);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        animation: none;
+    }
+    .chip,
+    .spark__bar,
+    .entry__meta a {
+        transition: none;
+    }
 }

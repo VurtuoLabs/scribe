@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <!--
+      Column names here must be the ones Contact list views actually resolve:
+      FULL_NAME, CONTACT.TITLE, CONTACT.EMAIL, CONTACT.PHONE1. The shorter forms
+      (NAME, TITLE, EMAIL, PHONE) look right but do not resolve and fail the deploy.
+    -->
     <fullName>Created_by_Scribe</fullName>
-    <columns>NAME</columns>
+    <columns>FULL_NAME</columns>
     <columns>ACCOUNT.NAME</columns>
-    <columns>TITLE</columns>
-    <columns>EMAIL</columns>
-    <columns>PHONE</columns>
+    <columns>CONTACT.TITLE</columns>
+    <columns>CONTACT.EMAIL</columns>
+    <columns>CONTACT.PHONE1</columns>
+    <columns>Scribe_Source_Call_Log__c</columns>
     <columns>CREATED_DATE</columns>
     <filterScope>Everything</filterScope>
     <filters>

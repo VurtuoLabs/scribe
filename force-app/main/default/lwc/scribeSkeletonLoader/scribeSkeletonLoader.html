@@ -1,0 +1,83 @@
+<template>
+    <div class="sk" role="status" aria-busy="true">
+        <span class="slds-assistive-text">{label}</span>
+
+        <!-- Text / paragraph placeholder: mirrors a block of transcript copy. -->
+        <template if:true={isText}>
+            <div aria-hidden="true">
+                <template for:each={lineItems} for:item="line">
+                    <div key={line.key} class="sk__bar" style={line.style}></div>
+                </template>
+            </div>
+        </template>
+
+        <!-- KPI placeholder: same rhythm as the loaded KPI (eyebrow, value, support). -->
+        <template if:true={isKpi}>
+            <div aria-hidden="true">
+                <div class="sk__bar sk__bar_eyebrow"></div>
+                <div class="sk__bar sk__bar_value"></div>
+                <div class="sk__bar sk__bar_support"></div>
+            </div>
+        </template>
+
+        <!-- Meter placeholder: label row plus track. -->
+        <template if:true={isMeter}>
+            <div aria-hidden="true">
+                <template for:each={rowItems} for:item="row">
+                    <div key={row.key} class="sk__meter">
+                        <div class="sk__meter-head">
+                            <div class="sk__bar sk__bar_label"></div>
+                            <div class="sk__bar sk__bar_count"></div>
+                        </div>
+                        <div class="sk__bar sk__bar_track"></div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Timeline placeholder: rail, dot, headline, meta. -->
+        <template if:true={isTimeline}>
+            <div aria-hidden="true">
+                <template for:each={rowItems} for:item="row">
+                    <div key={row.key} class="sk__entry">
+                        <div class="sk__dot"></div>
+                        <div class="sk__entry-body">
+                            <div class="sk__bar sk__bar_chip"></div>
+                            <div class="sk__bar sk__bar_headline"></div>
+                            <div class="sk__bar sk__bar_meta"></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Transcript placeholder: heard / wrote two-column group. -->
+        <template if:true={isTranscript}>
+            <div aria-hidden="true">
+                <template for:each={rowItems} for:item="row">
+                    <div key={row.key} class="sk__group">
+                        <div class="sk__group-head">
+                            <div class="sk__bar sk__bar_headline"></div>
+                            <div class="sk__bar sk__bar_chip"></div>
+                        </div>
+                        <div class="sk__group-body">
+                            <div class="sk__col sk__col_heard">
+                                <div class="sk__bar"></div>
+                                <div class="sk__bar"></div>
+                                <div class="sk__bar" style="width: 82%"></div>
+                                <div class="sk__bar" style="width: 64%"></div>
+                            </div>
+                            <div class="sk__col sk__col_wrote">
+                                <div class="sk__bar sk__bar_chip"></div>
+                                <div class="sk__bar sk__bar_headline"></div>
+                                <div class="sk__bar sk__bar_meta"></div>
+                                <div class="sk__bar sk__bar_chip"></div>
+                                <div class="sk__bar sk__bar_headline"></div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

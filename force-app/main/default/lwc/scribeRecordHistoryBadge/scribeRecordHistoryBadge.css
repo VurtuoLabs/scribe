@@ -1,0 +1,284 @@
+/* Scribe design tokens - see scribeHomeDashboard.css for the full scale.
+   Declared here so this component (and the shared components nested inside it)
+   carry the same rose-plum transcript identity on a record page. */
+:host {
+    --scribe-accent: #9f1239;
+    --scribe-accent-strong: #831843;
+    --scribe-accent-plum: #a21caf;
+    --scribe-accent-soft: #fdf2f6;
+    --scribe-accent-quiet: #f6dfe7;
+    --scribe-surface: #ffffff;
+    --scribe-surface-sunk: #f3f3f3;
+    --scribe-border: #ece0e4;
+    --scribe-ink: #2b1b21;
+    --scribe-ink-muted: #6d5661;
+    --scribe-radius: 0.75rem;
+    --scribe-radius-lg: 1rem;
+    --scribe-leading: 1.6;
+    --scribe-motion: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    display: block;
+    color: var(--scribe-ink);
+}
+
+.card {
+    padding: 0.875rem 1rem;
+    /* The rose rule is the annotation cue that ties this to the Scribe app. */
+    border-left: 3px solid var(--scribe-accent);
+    border-radius: var(--scribe-radius);
+    background: var(--scribe-surface);
+}
+
+/* Reserve the loaded height so the record page does not jump. */
+.card__skeleton {
+    min-height: 3.25rem;
+}
+
+.card__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.card__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: var(--scribe-radius);
+    background: var(--scribe-accent-soft);
+    --slds-c-icon-color-foreground-default: var(--scribe-accent);
+}
+
+.card__copy {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.eyebrow {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--scribe-accent);
+}
+
+.card__title {
+    margin-top: 0.0625rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.card__refresh {
+    --slds-c-button-text-color: var(--scribe-ink-muted);
+    --slds-c-button-text-color-hover: var(--scribe-accent);
+}
+
+/* ── Latest change ─────────────────────────────────────────────────────── */
+.latest {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    border-radius: var(--scribe-radius);
+    background: var(--scribe-surface-sunk);
+}
+
+.latest__top,
+.history__top {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+}
+
+.latest__time,
+.history__time {
+    margin-left: auto;
+    font-size: 0.6875rem;
+    white-space: nowrap;
+    color: var(--scribe-ink-muted);
+}
+
+.latest__headline {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    line-height: var(--scribe-leading);
+    overflow-wrap: anywhere;
+}
+
+.latest__meta,
+.history__meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.375rem;
+    font-size: 0.6875rem;
+    color: var(--scribe-ink-muted);
+}
+
+.latest__meta a,
+.history__meta a {
+    color: var(--scribe-accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--scribe-accent-quiet);
+    transition: border-color var(--scribe-motion);
+}
+
+.latest__meta a:hover,
+.history__meta a:hover {
+    border-color: var(--scribe-accent);
+}
+
+.latest__meta a:focus-visible,
+.history__meta a:focus-visible {
+    outline: 2px solid var(--scribe-accent);
+    outline-offset: 2px;
+}
+
+/* ── Earlier changes ───────────────────────────────────────────────────── */
+.card__toggle {
+    margin-top: 0.5rem;
+}
+
+.history {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.25rem;
+}
+
+.history__item {
+    display: flex;
+    gap: 0.625rem;
+    padding: 0.625rem 0;
+    border-top: 1px solid var(--scribe-border);
+}
+
+.history__item:first-child {
+    border-top: 0;
+}
+
+.history__rail {
+    position: relative;
+    flex: 0 0 auto;
+    width: 0.625rem;
+    display: flex;
+    justify-content: center;
+}
+
+.history__rail::before {
+    content: '';
+    position: absolute;
+    top: 0.75rem;
+    bottom: -1rem;
+    width: 1px;
+    background: var(--scribe-border);
+}
+
+.history__item:last-child .history__rail::before {
+    display: none;
+}
+
+.history__dot {
+    position: relative;
+    z-index: 1;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-top: 0.25rem;
+    border-radius: 50%;
+    background: var(--scribe-ink-muted);
+    box-shadow: 0 0 0 3px var(--scribe-surface);
+}
+
+.history__dot_accent {
+    background: var(--scribe-accent);
+}
+.history__dot_plum {
+    background: var(--scribe-accent-plum);
+}
+.history__dot_info {
+    background: #2b6ca3;
+}
+.history__dot_warning {
+    background: #014486;
+}
+
+.history__body {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.history__headline {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    line-height: var(--scribe-leading);
+    overflow-wrap: anywhere;
+}
+
+.history__note {
+    margin-top: 0.5rem;
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    color: var(--scribe-ink-muted);
+}
+
+/* ── Diff ──────────────────────────────────────────────────────────────── */
+.diff {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    padding: 0.4375rem 0.5625rem;
+    border-radius: var(--scribe-radius);
+    background: var(--scribe-accent-soft);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.diff_compact {
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.5rem;
+}
+
+.diff__old {
+    color: var(--scribe-ink-muted);
+    text-decoration: line-through;
+    overflow-wrap: anywhere;
+}
+
+.diff__new {
+    font-weight: 600;
+    color: var(--scribe-accent-strong);
+    overflow-wrap: anywhere;
+}
+
+.diff__arrow {
+    --slds-c-icon-color-foreground-default: var(--scribe-accent);
+}
+
+.reveal {
+    animation: scribe-reveal 200ms ease-out both;
+}
+
+@keyframes scribe-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(-0.25rem);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        animation: none;
+    }
+    .latest__meta a,
+    .history__meta a {
+        transition: none;
+    }
+}

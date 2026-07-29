@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <isExposed>false</isExposed>
+    <masterLabel>Scribe Status Badge</masterLabel>
+    <description>Shared status pill. Always pairs a text label with a tone-matched icon so state is never communicated by colour alone.</description>
+</LightningComponentBundle>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <isExposed>false</isExposed>
+    <masterLabel>Scribe KPI Card</masterLabel>
+    <description>Shared KPI card with label, prominent value, supporting text, trend indicator and its own loading, error and empty states. The hero variant marks the single most decision-critical number.</description>
+</LightningComponentBundle>

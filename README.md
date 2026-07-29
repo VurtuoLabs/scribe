@@ -138,7 +138,9 @@ sf agent publish  authoring-bundle --api-name Scribe_Agent
 sf agent activate --api-name Scribe_Agent
 ```
 
-Then add the **Scribe Record History** badge to the Opportunity Lightning record page in App Builder, and (optionally) set "Created by Scribe" as the default list view on the Tasks and Contacts tabs inside the Scribe app.
+Then add the **Scribe Record History** badge to the Opportunity Lightning record page in App Builder.
+
+Every object with a tab in the Scribe app ships an unfiltered **All** list view (`filterScope: Everything`), and that is what each tab should default to - the narrower views ("Created by Scribe", "This Week", "Field Updates Only") are filters a reviewer chooses deliberately, never the landing state.
 
 ## Configuration reference
 

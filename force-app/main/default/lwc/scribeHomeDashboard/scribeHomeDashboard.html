@@ -1,76 +1,444 @@
 <template>
-    <div class="slds-grid slds-gutters slds-wrap slds-p-bottom_small">
-        <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
-            <lightning-card>
-                <div class="slds-p-around_medium slds-text-align_center">
-                    <div class="slds-text-heading_large">{totalThisWeek}</div>
-                    <div class="slds-text-body_small slds-text-color_weak">changes this week</div>
-                </div>
-            </lightning-card>
-        </div>
-        <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
-            <lightning-card>
-                <div class="slds-p-around_medium slds-text-align_center">
-                    <div class="slds-text-heading_large">{totalAllTime}</div>
-                    <div class="slds-text-body_small slds-text-color_weak">changes all time</div>
-                </div>
-            </lightning-card>
-        </div>
-    </div>
+    <div class="scribe">
+        <!-- ── Masthead ───────────────────────────────────────────────────── -->
+        <header class="masthead">
+            <div class="masthead__copy">
+                <p class="eyebrow">Scribe · audit trail</p>
+                <h1 class="masthead__title">What Scribe wrote this week</h1>
+                <p class="masthead__sub">
+                    Every line below traces back to something a rep actually said on a call. Nothing Scribe
+                    does is invisible.
+                </p>
+            </div>
+            <div class="masthead__actions">
+                <p class="masthead__stamp" aria-live="polite">{lastUpdatedLabel}</p>
+                <lightning-button
+                    label={refreshLabel}
+                    icon-name="utility:refresh"
+                    variant="neutral"
+                    disabled={isRefreshing}
+                    onclick={handleRefresh}
+                ></lightning-button>
+            </div>
+        </header>
 
-    <template if:true={error}>
-        <div class="slds-text-color_error slds-p-around_small" role="alert">{error}</div>
-    </template>
+        <!-- Whole-dashboard failure: one honest message, one retry. -->
+        <template if:true={summaryError}>
+            <div class="block">
+                <c-scribe-error-state
+                    heading="The weekly rollup didn't load"
+                    message={summaryError.message}
+                    detail={summaryError.detail}
+                    retrying={isRefreshing}
+                    onretry={handleRefresh}
+                ></c-scribe-error-state>
+            </div>
+        </template>
 
-    <div class="slds-grid slds-gutters slds-wrap">
-        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_small">
-            <lightning-card title="Most active reps this week" icon-name="standard:user">
-                <template if:true={hasReps}>
-                    <ul class="slds-has-dividers_bottom-space slds-p-horizontal_medium">
-                        <template for:each={topReps} for:item="r">
-                            <li key={r.label} class="slds-item slds-grid slds-grid_align-spread">
-                                <span>{r.label}</span>
-                                <span class="slds-badge">{r.count}</span>
-                            </li>
-                        </template>
-                    </ul>
-                </template>
-                <template if:false={hasReps}>
-                    <p class="slds-p-around_medium slds-text-color_weak">No activity this week yet.</p>
-                </template>
-            </lightning-card>
-        </div>
+        <!-- Scribe has never written anything: explain, don't show five zeros. -->
+        <template if:true={showGlobalEmpty}>
+            <div class="block">
+                <c-scribe-empty-state
+                    icon-name="utility:record_create"
+                    heading="Scribe hasn't written anything yet"
+                    message="Ask the Scribe agent to log a call recap. Once it updates an Opportunity, creates a follow-up task or adds a contact, every one of those writes shows up here with its before and after values."
+                    action-label="Open call logs"
+                    action-icon-name="utility:open"
+                    onaction={handleOpenCallLogs}
+                ></c-scribe-empty-state>
+            </div>
+        </template>
 
-        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_small">
-            <lightning-card title="Most-touched objects this week" icon-name="standard:record">
-                <template if:true={hasObjects}>
-                    <ul class="slds-has-dividers_bottom-space slds-p-horizontal_medium">
-                        <template for:each={topObjects} for:item="o">
-                            <li key={o.label} class="slds-item slds-grid slds-grid_align-spread">
-                                <span>{o.label}</span>
-                                <span class="slds-badge">{o.count}</span>
-                            </li>
-                        </template>
-                    </ul>
-                </template>
-                <template if:false={hasObjects}>
-                    <p class="slds-p-around_medium slds-text-color_weak">No activity this week yet.</p>
-                </template>
-            </lightning-card>
-        </div>
-    </div>
+        <template if:false={showGlobalEmpty}>
+            <!-- ── KPI row ────────────────────────────────────────────────── -->
+            <template if:true={showSummaryContent}>
+                <div class="kpis">
+                    <!-- Hero: the one number a reviewer has to act on. Additive writes
+                     cannot damage anything; overwritten values can. -->
+                    <div class="kpis__cell kpis__cell_hero">
+                        <c-scribe-kpi-card
+                            hero
+                            label="Field values overwritten"
+                            value={heroValue}
+                            icon-name="utility:edit"
+                            supporting-text={heroSupport}
+                            trend-label={heroTrendLabel}
+                            trend-direction={heroTrendDirection}
+                            trend-tone="neutral"
+                            action-label="Review these changes"
+                            action-icon-name="utility:forward"
+                            loading={isSummaryLoading}
+                            refreshing={isRefreshing}
+                            onaction={handleReviewFieldUpdates}
+                        ></c-scribe-kpi-card>
+                    </div>
 
-    <lightning-card title="Changes, last 7 days" icon-name="standard:metrics">
-        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
-            <template for:each={trend} for:item="t">
-                <div key={t.key} class="slds-grid slds-grid_vertical-align-center slds-p-vertical_xxx-small">
-                    <div class="slds-size_1-of-4 slds-text-body_small slds-text-color_weak">{t.label}</div>
-                    <div class="slds-size_3-of-4 slds-grid slds-grid_vertical-align-center">
-                        <div class="scribe-bar" style={t.style}></div>
-                        <span class="slds-p-left_x-small slds-text-body_small">{t.count}</span>
+                    <div class="kpis__cell kpis__cell_half">
+                        <c-scribe-kpi-card
+                            label="Changes written"
+                            value={totalThisWeek}
+                            icon-name="utility:change_record_type"
+                            supporting-text={totalSupport}
+                            trend-label={volumeTrendLabel}
+                            trend-direction={volumeTrendDirection}
+                            trend-tone="neutral"
+                            loading={isSummaryLoading}
+                            refreshing={isRefreshing}
+                        >
+                            <!-- Compact 7-day chart: no library, no decoration. -->
+                            <div class="spark" role="img" aria-label={sparkAccessibleLabel}>
+                                <template for:each={sparkBars} for:item="bar">
+                                    <span key={bar.key} class="spark__col" title={bar.title}>
+                                        <span class="spark__bar" style={bar.style}></span>
+                                    </span>
+                                </template>
+                            </div>
+                            <p class="spark__axis">
+                                <span>{sparkFirstLabel}</span>
+                                <span>today</span>
+                            </p>
+                        </c-scribe-kpi-card>
+                    </div>
+
+                    <div class="kpis__cell kpis__cell_third">
+                        <c-scribe-kpi-card
+                            label="Calls logged"
+                            value={callsLogged}
+                            icon-name="utility:note"
+                            supporting-text="Recaps parsed into a call log this week."
+                            loading={isSummaryLoading}
+                            refreshing={isRefreshing}
+                        ></c-scribe-kpi-card>
+                    </div>
+
+                    <div class="kpis__cell kpis__cell_third">
+                        <c-scribe-kpi-card
+                            label="Records created"
+                            value={recordsCreated}
+                            icon-name="utility:add"
+                            supporting-text={recordsCreatedSupport}
+                            loading={isSummaryLoading}
+                            refreshing={isRefreshing}
+                        ></c-scribe-kpi-card>
+                    </div>
+
+                    <div class="kpis__cell kpis__cell_third">
+                        <c-scribe-kpi-card
+                            label="All time"
+                            value={totalAllTime}
+                            icon-name="utility:clock"
+                            supporting-text="Audit rows since Scribe went live."
+                            loading={isSummaryLoading}
+                            refreshing={isRefreshing}
+                        ></c-scribe-kpi-card>
                     </div>
                 </div>
+
+                <!-- ── Breakdown by change type ───────────────────────────────── -->
+                <section class="panel">
+                    <c-scribe-section-header
+                        title="How this week's writes break down"
+                        description="Overwrites replace something a person already entered. Everything else only adds."
+                        icon-name="utility:richtextbulletedlist"
+                        count-label={breakdownCountLabel}
+                        collapsible
+                        expanded={breakdownExpanded}
+                        ontoggle={handleBreakdownToggle}
+                    ></c-scribe-section-header>
+
+                    <template if:true={breakdownExpanded}>
+                        <div class="panel__body reveal">
+                            <template if:true={isSummaryLoading}>
+                                <c-scribe-skeleton-loader
+                                    variant="meter"
+                                    rows="4"
+                                    label="Loading this week's breakdown"
+                                ></c-scribe-skeleton-loader>
+                            </template>
+
+                            <template if:false={isSummaryLoading}>
+                                <template if:true={hasBreakdown}>
+                                    <ul class="stack">
+                                        <template for:each={breakdown} for:item="row">
+                                            <li key={row.key}>
+                                                <c-scribe-meter-bar
+                                                    label={row.label}
+                                                    value={row.count}
+                                                    max={row.max}
+                                                    tone={row.tone}
+                                                    hint={row.hint}
+                                                    show-percent
+                                                ></c-scribe-meter-bar>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </template>
+                                <template if:false={hasBreakdown}>
+                                    <c-scribe-empty-state
+                                        icon-name="utility:pause"
+                                        heading="Nothing written this week"
+                                        message="Scribe has been quiet since Monday. Older activity is still in the change log."
+                                        action-label="Open the change log"
+                                        action-icon-name="utility:open"
+                                        onaction={handleOpenConsole}
+                                    ></c-scribe-empty-state>
+                                </template>
+                            </template>
+                        </div>
+                    </template>
+                </section>
             </template>
-        </div>
-    </lightning-card>
+
+            <!-- ── Narrative split: the log, then who and what it touched ─── -->
+            <div class="split">
+                <section class="panel split__main">
+                    <c-scribe-section-header
+                        title="Latest entries"
+                        description="The most recent writes, each one traceable to its source call."
+                        icon-name="utility:activity"
+                        count-label={entriesCountLabel}
+                    >
+                        <lightning-button
+                            slot="actions"
+                            variant="brand"
+                            label="Open full change log"
+                            icon-name="utility:forward"
+                            icon-position="right"
+                            onclick={handleOpenConsole}
+                        ></lightning-button>
+                    </c-scribe-section-header>
+
+                    <!-- Filter bar for the entry list -->
+                    <div class="toolbar">
+                        <div class="toolbar__search">
+                            <lightning-input
+                                type="search"
+                                label="Search latest entries"
+                                variant="label-hidden"
+                                placeholder="Search record, field or rep"
+                                value={searchTerm}
+                                onchange={handleSearch}
+                            ></lightning-input>
+                        </div>
+                        <div class="toolbar__sort">
+                            <lightning-combobox
+                                label="Sort entries"
+                                variant="label-hidden"
+                                value={sortDirection}
+                                options={sortOptions}
+                                onchange={handleSortChange}
+                            ></lightning-combobox>
+                        </div>
+                    </div>
+
+                    <template if:true={hasTypeChips}>
+                        <div class="chips" role="group" aria-label="Filter entries by change type">
+                            <template for:each={typeChips} for:item="chip">
+                                <button
+                                    key={chip.value}
+                                    type="button"
+                                    class={chip.class}
+                                    data-value={chip.value}
+                                    aria-pressed={chip.pressed}
+                                    onclick={handleTypeChip}
+                                >
+                                    {chip.label}
+                                </button>
+                            </template>
+                        </div>
+                    </template>
+
+                    <div class="panel__body">
+                        <template if:true={isEntriesLoading}>
+                            <c-scribe-skeleton-loader
+                                variant="timeline"
+                                rows="4"
+                                label="Loading the latest entries"
+                            ></c-scribe-skeleton-loader>
+                        </template>
+
+                        <template if:false={isEntriesLoading}>
+                            <template if:true={entriesError}>
+                                <c-scribe-error-state
+                                    variant="inline"
+                                    heading="The entry list didn't load"
+                                    message={entriesError.message}
+                                    detail={entriesError.detail}
+                                    retrying={isRefreshing}
+                                    onretry={handleRetryEntries}
+                                ></c-scribe-error-state>
+                            </template>
+
+                            <template if:false={entriesError}>
+                                <template if:true={hasVisibleEntries}>
+                                    <ul class="timeline reveal">
+                                        <template for:each={visibleEntries} for:item="entry">
+                                            <li key={entry.id} class="entry">
+                                                <span class="entry__rail" aria-hidden="true">
+                                                    <span class={entry.dotClass}></span>
+                                                </span>
+                                                <div class="entry__body">
+                                                    <div class="entry__top">
+                                                        <c-scribe-status-badge
+                                                            label={entry.badgeLabel}
+                                                            tone={entry.badgeTone}
+                                                            icon-name={entry.badgeIcon}
+                                                        ></c-scribe-status-badge>
+                                                        <c-scribe-status-badge
+                                                            label={entry.confirmedLabel}
+                                                            tone={entry.confirmedTone}
+                                                            icon-name={entry.confirmedIcon}
+                                                            tooltip={entry.confirmedTooltip}
+                                                        ></c-scribe-status-badge>
+                                                        <span class="entry__time">{entry.relative}</span>
+                                                    </div>
+
+                                                    <p class="entry__headline">{entry.headline}</p>
+
+                                                    <template if:true={entry.isDiff}>
+                                                        <p class="diff">
+                                                            <span class="slds-assistive-text"
+                                                                >{entry.diffAssistive}</span
+                                                            >
+                                                            <span class="diff__old" aria-hidden="true"
+                                                                >{entry.oldValue}</span
+                                                            >
+                                                            <lightning-icon
+                                                                icon-name="utility:forward"
+                                                                size="xx-small"
+                                                                class="diff__arrow"
+                                                            ></lightning-icon>
+                                                            <span class="diff__new" aria-hidden="true"
+                                                                >{entry.newValue}</span
+                                                            >
+                                                        </p>
+                                                    </template>
+
+                                                    <p class="entry__meta">
+                                                        <span>{entry.meta}</span>
+                                                        <template if:true={entry.callLogId}>
+                                                            <a
+                                                                href={entry.callUrl}
+                                                                data-id={entry.callLogId}
+                                                                onclick={handleOpenRecord}
+                                                                >{entry.callLabel}</a
+                                                            >
+                                                        </template>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </template>
+
+                                <template if:false={hasVisibleEntries}>
+                                    <c-scribe-empty-state
+                                        icon-name={entriesEmptyIcon}
+                                        heading={entriesEmptyHeading}
+                                        message={entriesEmptyMessage}
+                                        action-label={entriesEmptyAction}
+                                        onaction={handleClearEntryFilters}
+                                    ></c-scribe-empty-state>
+                                </template>
+                            </template>
+                        </template>
+                    </div>
+                </section>
+
+                <template if:true={showSummaryContent}>
+                    <div class="split__side">
+                        <section class="panel">
+                            <c-scribe-section-header
+                                title="Most active reps"
+                                description="Whose conversations Scribe worked from this week."
+                                icon-name="utility:user"
+                                collapsible
+                                expanded={repsExpanded}
+                                ontoggle={handleRepsToggle}
+                            ></c-scribe-section-header>
+                            <template if:true={repsExpanded}>
+                                <div class="panel__body reveal">
+                                    <template if:true={isSummaryLoading}>
+                                        <c-scribe-skeleton-loader
+                                            variant="meter"
+                                            rows="3"
+                                            label="Loading rep activity"
+                                        ></c-scribe-skeleton-loader>
+                                    </template>
+                                    <template if:false={isSummaryLoading}>
+                                        <template if:true={hasReps}>
+                                            <ul class="stack">
+                                                <template for:each={repRows} for:item="row">
+                                                    <li key={row.key}>
+                                                        <c-scribe-meter-bar
+                                                            label={row.label}
+                                                            value={row.count}
+                                                            max={row.max}
+                                                            tone="accent"
+                                                        ></c-scribe-meter-bar>
+                                                    </li>
+                                                </template>
+                                            </ul>
+                                        </template>
+                                        <template if:false={hasReps}>
+                                            <c-scribe-empty-state
+                                                variant="inline"
+                                                icon-name="utility:user"
+                                                heading="No rep activity this week."
+                                            ></c-scribe-empty-state>
+                                        </template>
+                                    </template>
+                                </div>
+                            </template>
+                        </section>
+
+                        <section class="panel">
+                            <c-scribe-section-header
+                                title="Most-touched objects"
+                                description="Where this week's writes landed."
+                                icon-name="utility:record"
+                                collapsible
+                                expanded={objectsExpanded}
+                                ontoggle={handleObjectsToggle}
+                            ></c-scribe-section-header>
+                            <template if:true={objectsExpanded}>
+                                <div class="panel__body reveal">
+                                    <template if:true={isSummaryLoading}>
+                                        <c-scribe-skeleton-loader
+                                            variant="meter"
+                                            rows="3"
+                                            label="Loading object activity"
+                                        ></c-scribe-skeleton-loader>
+                                    </template>
+                                    <template if:false={isSummaryLoading}>
+                                        <template if:true={hasObjects}>
+                                            <ul class="stack">
+                                                <template for:each={objectRows} for:item="row">
+                                                    <li key={row.key}>
+                                                        <c-scribe-meter-bar
+                                                            label={row.label}
+                                                            value={row.count}
+                                                            max={row.max}
+                                                            tone="plum"
+                                                        ></c-scribe-meter-bar>
+                                                    </li>
+                                                </template>
+                                            </ul>
+                                        </template>
+                                        <template if:false={hasObjects}>
+                                            <c-scribe-empty-state
+                                                variant="inline"
+                                                icon-name="utility:record"
+                                                heading="No objects touched this week."
+                                            ></c-scribe-empty-state>
+                                        </template>
+                                    </template>
+                                </div>
+                            </template>
+                        </section>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
 </template>
