@@ -1,0 +1,35 @@
+<template>
+    <div class={containerClass} role="alert">
+        <div class="err__head">
+            <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
+            <div class="err__copy">
+                <p class="err__title">{heading}</p>
+                <p class="err__message">{message}</p>
+            </div>
+        </div>
+
+        <div class="err__actions">
+            <template if:true={showRetry}>
+                <lightning-button
+                    variant="brand-outline"
+                    label={retryButtonLabel}
+                    icon-name="utility:refresh"
+                    disabled={retrying}
+                    onclick={handleRetry}
+                ></lightning-button>
+            </template>
+            <template if:true={detail}>
+                <lightning-button
+                    variant="base"
+                    label={detailToggleLabel}
+                    aria-expanded={detailExpandedAttr}
+                    onclick={toggleDetail}
+                ></lightning-button>
+            </template>
+        </div>
+
+        <template if:true={detailExpanded}>
+            <pre class="err__detail">{detail}</pre>
+        </template>
+    </div>
+</template>

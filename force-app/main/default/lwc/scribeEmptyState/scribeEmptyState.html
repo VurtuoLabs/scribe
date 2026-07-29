@@ -1,0 +1,27 @@
+<template>
+    <div class={containerClass}>
+        <template if:true={iconName}>
+            <span class="es__mark">
+                <lightning-icon icon-name={iconName} size={resolvedIconSize}></lightning-icon>
+            </span>
+        </template>
+
+        <div class="es__copy">
+            <h3 class="es__heading">{heading}</h3>
+            <template if:true={message}>
+                <p class="es__message">{message}</p>
+            </template>
+        </div>
+
+        <template if:true={actionLabel}>
+            <div class="es__action">
+                <lightning-button
+                    variant={actionVariant}
+                    label={actionLabel}
+                    icon-name={actionIconName}
+                    onclick={handleAction}
+                ></lightning-button>
+            </div>
+        </template>
+    </div>
+</template>

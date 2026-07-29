@@ -1,0 +1,8 @@
+<template>
+    <span class={badgeClass} title={tooltip}>
+        <template if:true={resolvedIcon}>
+            <lightning-icon icon-name={resolvedIcon} size="xx-small" class="badge__icon"></lightning-icon>
+        </template>
+        <span class="badge__label">{label}</span>
+    </span>
+</template>

@@ -1,3 +1,503 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * Scribe design tokens - "transcript" identity. Same scale as the dashboard;
+ * declared here too because CSS is scoped per component and inherited by the
+ * nested Scribe components through the shadow boundary.
+ * ═══════════════════════════════════════════════════════════════════════════ */
 :host {
+    --scribe-accent: #9f1239;
+    --scribe-accent-strong: #831843;
+    --scribe-accent-plum: #a21caf;
+    --scribe-accent-soft: #fdf2f6;
+    --scribe-accent-quiet: #f6dfe7;
+    --scribe-surface: #ffffff;
+    --scribe-surface-sunk: #f3f3f3;
+    --scribe-border: #ece0e4;
+    --scribe-ink: #2b1b21;
+    --scribe-ink-muted: #6d5661;
+    --scribe-radius: 0.75rem;
+    --scribe-radius-lg: 1rem;
+    --scribe-leading: 1.6;
+    --scribe-motion: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+
     display: block;
+    color: var(--scribe-ink);
+}
+
+.scribe {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: var(--scribe-surface-sunk);
+    border-radius: var(--scribe-radius-lg);
+    overflow-x: hidden;
+}
+
+/* ── Masthead ──────────────────────────────────────────────────────────── */
+.masthead {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--scribe-border);
+}
+
+.eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--scribe-accent);
+}
+
+.masthead__title {
+    margin-top: 0.25rem;
+    font-size: 1.625rem;
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+}
+
+.masthead__sub {
+    margin-top: 0.375rem;
+    max-width: 44rem;
+    font-size: 0.875rem;
+    line-height: var(--scribe-leading);
+    color: var(--scribe-ink-muted);
+}
+
+.masthead__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.masthead__stamp {
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--scribe-ink-muted);
+}
+
+/* ── Panels ────────────────────────────────────────────────────────────── */
+.panel {
+    padding: 1.125rem 1.25rem;
+    border: 1px solid var(--scribe-border);
+    border-radius: var(--scribe-radius-lg);
+    background: var(--scribe-surface);
+    box-shadow: 0 1px 2px rgba(43, 27, 33, 0.04);
+}
+
+.panel__body {
+    margin-top: 1rem;
+}
+
+.reveal {
+    animation: scribe-reveal 200ms ease-out both;
+}
+
+/* ── Filter bar ────────────────────────────────────────────────────────── */
+.filters {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem 1rem;
+}
+
+@media (min-width: 40em) {
+    .filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .filters__cell_wide {
+        grid-column: span 2;
+    }
+}
+
+@media (min-width: 64em) {
+    .filters {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .filters__cell_wide {
+        grid-column: span 2;
+    }
+}
+
+.filters__summary {
+    margin-top: 0.875rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--scribe-ink-muted);
+}
+
+.filters__error {
+    margin-top: 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: #8b1a12;
+}
+
+/* ── View toggle ───────────────────────────────────────────────────────── */
+.viewtoggle {
+    display: inline-flex;
+    padding: 0.125rem;
+    border: 1px solid var(--scribe-border);
+    border-radius: 999px;
+    background: var(--scribe-surface-sunk);
+}
+
+.viewtoggle__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3125rem;
+    min-height: 2.25rem;
+    padding: 0.25rem 0.875rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--scribe-ink-muted);
+    cursor: pointer;
+    transition:
+        background-color var(--scribe-motion),
+        color var(--scribe-motion);
+    --slds-c-icon-color-foreground-default: var(--scribe-ink-muted);
+}
+
+.viewtoggle__btn:hover {
+    color: var(--scribe-accent-strong);
+}
+
+.viewtoggle__btn:focus-visible {
+    outline: 2px solid var(--scribe-accent);
+    outline-offset: 2px;
+}
+
+.viewtoggle__btn_on {
+    background: var(--scribe-surface);
+    color: var(--scribe-accent-strong);
+    box-shadow: 0 1px 2px rgba(43, 27, 33, 0.08);
+    --slds-c-icon-color-foreground-default: var(--scribe-accent);
+}
+
+/* ── Long-fetch progress ───────────────────────────────────────────────── */
+.progress {
+    margin-top: 0.875rem;
+}
+
+.progress__label {
+    margin-top: 0.375rem;
+    font-size: 0.75rem;
+    color: var(--scribe-ink-muted);
+}
+
+/* ── Transcript ────────────────────────────────────────────────────────── */
+.calls {
+    display: flex;
+    flex-direction: column;
+}
+
+.call {
+    padding: 1.25rem 0;
+    border-top: 1px solid var(--scribe-border);
+}
+
+.call:first-child {
+    border-top: 0;
+    padding-top: 0.25rem;
+}
+
+.call__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.call__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.call__title a {
+    color: var(--scribe-accent-strong);
+    text-decoration: none;
+    border-bottom: 1px solid var(--scribe-accent-quiet);
+    transition: border-color var(--scribe-motion);
+}
+
+.call__title a:hover,
+.call__title a:focus {
+    border-color: var(--scribe-accent);
+}
+
+.call__title a:focus-visible,
+.col__link a:focus-visible,
+.write__meta a:focus-visible {
+    outline: 2px solid var(--scribe-accent);
+    outline-offset: 2px;
+}
+
+.call__meta {
+    margin-top: 0.125rem;
+    font-size: 0.75rem;
+    color: var(--scribe-ink-muted);
+}
+
+.call__tags {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+}
+
+/* The signature relationship: heard on the left, written on the right. */
+.call__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    margin-top: 0.875rem;
+}
+
+@media (min-width: 48em) {
+    .call__body {
+        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        gap: 1.75rem;
+    }
+}
+
+.col__label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--scribe-ink-muted);
+}
+
+.col_heard {
+    min-width: 0;
+}
+
+.recap {
+    margin-top: 0.5rem;
+    padding: 0.75rem 0.875rem;
+    border-left: 2px solid var(--scribe-accent-quiet);
+    border-radius: 0 var(--scribe-radius) var(--scribe-radius) 0;
+    background: var(--scribe-surface-sunk);
+    font-size: 0.875rem;
+    /* Reading measure: recaps are prose, not table cells. */
+    line-height: 1.7;
+    color: var(--scribe-ink);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.recap_missing {
+    color: var(--scribe-ink-muted);
+    font-style: italic;
+    white-space: normal;
+}
+
+.col__link {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.col__link a,
+.write__meta a {
+    color: var(--scribe-accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--scribe-accent-quiet);
+    transition: border-color var(--scribe-motion);
+}
+
+.col__link a:hover,
+.write__meta a:hover {
+    border-color: var(--scribe-accent);
+}
+
+.col_wrote {
+    min-width: 0;
+}
+
+.writes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.write {
+    padding: 0.75rem 0.875rem;
+    border: 1px solid var(--scribe-border);
+    border-radius: var(--scribe-radius);
+    background: var(--scribe-surface);
+    transition:
+        border-color var(--scribe-motion),
+        box-shadow var(--scribe-motion),
+        background-color var(--scribe-motion);
+}
+
+.write:hover {
+    border-color: var(--scribe-accent-quiet);
+    box-shadow: 0 2px 8px rgba(43, 27, 33, 0.06);
+}
+
+.write:focus-within {
+    border-color: var(--scribe-accent);
+}
+
+.write__top {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+}
+
+.write__time {
+    margin-left: auto;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    color: var(--scribe-ink-muted);
+}
+
+.write__menu {
+    --slds-c-button-text-color: var(--scribe-ink-muted);
+    --slds-c-button-text-color-hover: var(--scribe-accent);
+}
+
+.write__headline {
+    margin-top: 0.5rem;
+    font-size: 0.9375rem;
+    line-height: var(--scribe-leading);
+    overflow-wrap: anywhere;
+}
+
+.write__meta {
+    display: flex;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    margin-top: 0.375rem;
+    font-size: 0.75rem;
+    color: var(--scribe-ink-muted);
+}
+
+/* ── The before → after diff: the reason this screen exists ────────────── */
+.diff {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.625rem;
+    border-radius: var(--scribe-radius);
+    background: var(--scribe-accent-soft);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+}
+
+.diff__old {
+    color: var(--scribe-ink-muted);
+    text-decoration: line-through;
+    overflow-wrap: anywhere;
+}
+
+.diff__new {
+    font-weight: 600;
+    color: var(--scribe-accent-strong);
+    overflow-wrap: anywhere;
+}
+
+.diff__arrow {
+    --slds-c-icon-color-foreground-default: var(--scribe-accent);
+}
+
+/* ── Table view ────────────────────────────────────────────────────────── */
+.table {
+    /* Small screens scroll the grid rather than the page. */
+    overflow-x: auto;
+    min-height: 12rem;
+}
+
+/* ── Pager + coverage ──────────────────────────────────────────────────── */
+.pager {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--scribe-border);
+}
+
+.pager__label {
+    font-size: 0.75rem;
+    color: var(--scribe-ink-muted);
+}
+
+.coverage {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--scribe-border);
+}
+
+.coverage__label {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--scribe-ink-muted);
+}
+
+@media (max-width: 30em) {
+    .scribe {
+        padding: 0.75rem;
+        gap: 1rem;
+    }
+    .panel {
+        padding: 1rem;
+    }
+    .masthead__title {
+        font-size: 1.375rem;
+    }
+    .masthead__actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .pager,
+    .coverage {
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+@keyframes scribe-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(-0.25rem);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        animation: none;
+    }
+    .write,
+    .viewtoggle__btn,
+    .call__title a,
+    .col__link a,
+    .write__meta a {
+        transition: none;
+    }
 }

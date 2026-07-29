@@ -3,7 +3,7 @@
     <apiVersion>65.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Scribe Record History Badge</masterLabel>
-    <description>Shows how many changes Scribe has made to the current record, expandable to the list with links back to each source call.</description>
+    <description>Record-page annotation: how many changes Scribe made here, the most recent one shown in full with its before/after values, and the earlier history one click away with links back to each source call.</description>
     <targets>
         <target>lightning__RecordPage</target>
     </targets>

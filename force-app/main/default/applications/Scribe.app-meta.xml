@@ -5,8 +5,9 @@
     <navType>Standard</navType>
     <uiType>Lightning</uiType>
     <formFactors>Large</formFactors>
+    <formFactors>Small</formFactors>
     <brand>
-        <headerColor>#032D60</headerColor>
+        <headerColor>#9F1239</headerColor>
         <shouldOverrideOrgTheme>true</shouldOverrideOrgTheme>
     </brand>
     <tabs>Scribe_Home</tabs>

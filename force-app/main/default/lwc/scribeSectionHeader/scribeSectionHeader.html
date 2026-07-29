@@ -1,0 +1,44 @@
+<template>
+    <header class="hd">
+        <div class="hd__main">
+            <template if:true={collapsible}>
+                <lightning-button-icon
+                    class="hd__toggle"
+                    icon-name={toggleIcon}
+                    variant="bare"
+                    size="small"
+                    alternative-text={toggleAlternativeText}
+                    title={toggleAlternativeText}
+                    aria-expanded={expandedAttr}
+                    onclick={handleToggle}
+                ></lightning-button-icon>
+            </template>
+
+            <template if:true={iconName}>
+                <span class="hd__mark">
+                    <lightning-icon icon-name={iconName} size="x-small"></lightning-icon>
+                </span>
+            </template>
+
+            <div class="hd__copy">
+                <div class="hd__title-row">
+                    <h2 class="hd__title">{title}</h2>
+                    <template if:true={countLabel}>
+                        <c-scribe-status-badge
+                            label={countLabel}
+                            tone="neutral"
+                            hide-icon
+                        ></c-scribe-status-badge>
+                    </template>
+                </div>
+                <template if:true={description}>
+                    <p class="hd__description">{description}</p>
+                </template>
+            </div>
+        </div>
+
+        <div class="hd__actions">
+            <slot name="actions"></slot>
+        </div>
+    </header>
+</template>

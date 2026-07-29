@@ -1,0 +1,19 @@
+<template>
+    <div class="meter">
+        <div class="meter__head">
+            <span class="meter__label">{label}</span>
+            <span class="meter__figures">
+                <span class="meter__value">{value}</span>
+                <template if:true={showPercent}>
+                    <span class="meter__percent">{percentLabel}</span>
+                </template>
+            </span>
+        </div>
+        <div class={trackClass} role="img" aria-label={accessibleLabel}>
+            <div class="meter__fill" style={fillStyle}></div>
+        </div>
+        <template if:true={hint}>
+            <p class="meter__hint">{hint}</p>
+        </template>
+    </div>
+</template>

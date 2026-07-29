@@ -1,0 +1,146 @@
+:host {
+    display: block;
+}
+
+.sk__bar {
+    height: 0.75rem;
+    margin-bottom: 0.625rem;
+    border-radius: var(--scribe-radius, 0.75rem);
+    background: var(--scribe-accent-quiet, #f6dfe7);
+    background-image: linear-gradient(
+        90deg,
+        var(--scribe-accent-quiet, #f6dfe7) 0%,
+        var(--scribe-surface-sunk, #fbf6f4) 50%,
+        var(--scribe-accent-quiet, #f6dfe7) 100%
+    );
+    background-size: 220% 100%;
+    animation: scribe-shimmer 1400ms ease-in-out infinite;
+}
+
+.sk__bar:last-child {
+    margin-bottom: 0;
+}
+
+/* --- KPI variant: matches the loaded card's eyebrow / value / support rhythm. */
+.sk__bar_eyebrow {
+    width: 45%;
+    height: 0.6875rem;
+}
+.sk__bar_value {
+    width: 62%;
+    height: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+.sk__bar_support {
+    width: 80%;
+    height: 0.6875rem;
+}
+
+/* --- Meter variant. */
+.sk__meter {
+    margin-bottom: 1rem;
+}
+.sk__meter:last-child {
+    margin-bottom: 0;
+}
+.sk__meter-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+.sk__bar_label {
+    width: 40%;
+}
+.sk__bar_count {
+    width: 3rem;
+}
+.sk__bar_track {
+    height: 0.5rem;
+    margin-bottom: 0;
+}
+
+/* --- Timeline variant. */
+.sk__entry {
+    display: flex;
+    gap: 0.75rem;
+    padding-bottom: 1.25rem;
+}
+.sk__entry:last-child {
+    padding-bottom: 0;
+}
+.sk__dot {
+    flex: 0 0 auto;
+    width: 0.75rem;
+    height: 0.75rem;
+    margin-top: 0.25rem;
+    border-radius: 50%;
+    background: var(--scribe-accent-quiet, #f6dfe7);
+}
+.sk__entry-body {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.sk__bar_chip {
+    width: 6rem;
+    height: 0.875rem;
+}
+.sk__bar_headline {
+    width: 78%;
+    height: 1rem;
+}
+.sk__bar_meta {
+    width: 52%;
+    height: 0.6875rem;
+    margin-bottom: 0;
+}
+
+/* --- Transcript variant: reserves the two-column heard / wrote box. */
+.sk__group {
+    padding: 1rem 0;
+    border-top: 1px solid var(--scribe-border, #ece0e4);
+}
+.sk__group:first-child {
+    border-top: 0;
+}
+.sk__group-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+.sk__group-head .sk__bar {
+    margin-bottom: 0;
+}
+.sk__group-body {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 1.5rem;
+}
+.sk__col_heard {
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--scribe-accent-quiet, #f6dfe7);
+}
+
+@media (max-width: 47.9375em) {
+    .sk__group-body {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1rem;
+    }
+}
+
+@keyframes scribe-shimmer {
+    0% {
+        background-position: 120% 0;
+    }
+    100% {
+        background-position: -120% 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sk__bar {
+        animation: none;
+        background-image: none;
+    }
+}

@@ -1,0 +1,78 @@
+:host {
+    display: inline-flex;
+    max-width: 100%;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3125rem;
+    max-width: 100%;
+    padding: 0.1875rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+
+.badge__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.badge__icon {
+    flex: 0 0 auto;
+}
+
+/* Rose-plum family for "Scribe wrote something"; standard semantics elsewhere. */
+.badge_accent {
+    background: var(--scribe-accent-soft, #fdf2f6);
+    border-color: var(--scribe-accent-quiet, #f6dfe7);
+    color: var(--scribe-accent-strong, #831843);
+    --slds-c-icon-color-foreground-default: var(--scribe-accent, #9f1239);
+}
+
+.badge_plum {
+    background: #faf0fd;
+    border-color: #f0dcf7;
+    color: #6b1d75;
+    --slds-c-icon-color-foreground-default: #86198f;
+}
+
+.badge_success {
+    background: #edf8f2;
+    border-color: #cfeadd;
+    color: #1a6b47;
+    --slds-c-icon-color-foreground-default: #2e844a;
+}
+
+.badge_warning {
+    background: #eef4ff;
+    border-color: #cfe4fb;
+    color: #032d60;
+    --slds-c-icon-color-foreground-default: #014486;
+}
+
+.badge_error {
+    background: #fdf0ef;
+    border-color: #f7d7d4;
+    color: #8b1a12;
+    --slds-c-icon-color-foreground-default: #b3261e;
+}
+
+.badge_info {
+    background: #eef4fb;
+    border-color: #d6e4f5;
+    color: #1c4d80;
+    --slds-c-icon-color-foreground-default: #2b6ca3;
+}
+
+.badge_neutral {
+    background: var(--scribe-surface-sunk, #fbf6f4);
+    border-color: var(--scribe-border, #ece0e4);
+    color: var(--scribe-ink-muted, #6d5661);
+    --slds-c-icon-color-foreground-default: var(--scribe-ink-muted, #6d5661);
+}

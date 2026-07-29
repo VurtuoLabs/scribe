@@ -1,0 +1,68 @@
+<template>
+    <article class={cardClass} aria-busy={busyAttr}>
+        <!-- Loading: the skeleton lives inside the same box, so nothing moves on load. -->
+        <template if:true={loading}>
+            <c-scribe-skeleton-loader variant="kpi" label={loadingLabel}></c-scribe-skeleton-loader>
+        </template>
+
+        <template if:false={loading}>
+            <template if:true={errorMessage}>
+                <c-scribe-error-state
+                    variant="inline"
+                    heading="Not available"
+                    message={errorMessage}
+                    detail={errorDetail}
+                    retry-label="Retry"
+                    onretry={handleRetry}
+                ></c-scribe-error-state>
+            </template>
+
+            <template if:false={errorMessage}>
+                <div class="kpi__body">
+                    <h3 class="kpi__label">
+                        <template if:true={iconName}>
+                            <lightning-icon
+                                icon-name={iconName}
+                                size="xx-small"
+                                class="kpi__icon"
+                            ></lightning-icon>
+                        </template>
+                        <span>{label}</span>
+                    </h3>
+
+                    <p class="kpi__value">{displayValue}</p>
+
+                    <template if:true={supportingText}>
+                        <p class="kpi__support">{supportingText}</p>
+                    </template>
+
+                    <template if:true={trendLabel}>
+                        <p class={trendClass}>
+                            <lightning-icon
+                                icon-name={trendIcon}
+                                size="xx-small"
+                                class="kpi__trend-icon"
+                            ></lightning-icon>
+                            <span>{trendLabel}</span>
+                        </p>
+                    </template>
+
+                    <!-- Optional compact visual (e.g. the 7-day sparkline). -->
+                    <slot></slot>
+
+                    <template if:true={actionLabel}>
+                        <div class="kpi__action">
+                            <lightning-button
+                                variant={resolvedActionVariant}
+                                label={actionLabel}
+                                icon-name={actionIconName}
+                                icon-position="right"
+                                onclick={handleAction}
+                            ></lightning-button>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </template>
+    </article>
+</template>

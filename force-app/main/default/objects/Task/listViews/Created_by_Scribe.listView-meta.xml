@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <!--
+      Columns match the vocabulary the sibling All view already proves resolves:
+      WHAT_NAME, WHO_NAME, CORE.USERS.ALIAS, DUE_DATE, STATUS. The previous
+      WHAT / TASK.WHO_NAME / ASSIGNED_TO / TASK.DUE_DATE / TASK.STATUS forms do not
+      resolve and fail the deploy.
+    -->
     <fullName>Created_by_Scribe</fullName>
     <columns>SUBJECT</columns>
-    <columns>WHAT</columns>
-    <columns>TASK.WHO_NAME</columns>
-    <columns>ASSIGNED_TO</columns>
-    <columns>TASK.DUE_DATE</columns>
-    <columns>TASK.STATUS</columns>
+    <columns>WHAT_NAME</columns>
+    <columns>WHO_NAME</columns>
+    <columns>CORE.USERS.ALIAS</columns>
+    <columns>DUE_DATE</columns>
+    <columns>STATUS</columns>
+    <columns>Scribe_Source_Call_Log__c</columns>
     <columns>CREATED_DATE</columns>
     <filterScope>Everything</filterScope>
     <filters>

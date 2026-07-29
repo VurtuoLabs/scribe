@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This is the object's default page layout. Salesforce auto-creates a layout named
+  "<Object Label> Layout" the first time a custom object is deployed, and assigns it
+  to every profile; deploying this file by that exact name overwrites that layout in
+  place, so no layout assignment is needed.
+
+  The Lightning record page (Scribe_Call_Log_Record_Page) is what desktop users see.
+  This layout still matters for: the mobile app, the "Related Lists" component,
+  page-layout-driven related lists, and any user who falls back to the default page.
+  Field order here mirrors the record page so the two never tell different stories.
+-->
+<Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layoutSections>
+        <customLabel>true</customLabel>
+        <detailHeading>true</detailHeading>
+        <editHeading>true</editHeading>
+        <label>What the Rep Told Scribe</label>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Call_Summary__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Objections__c</field>
+            </layoutItems>
+        </layoutColumns>
+        <style>OneColumn</style>
+    </layoutSections>
+    <layoutSections>
+        <customLabel>true</customLabel>
+        <detailHeading>true</detailHeading>
+        <editHeading>true</editHeading>
+        <label>Deal Context at Log Time</label>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Name</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Opportunity__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Stage_At_Log__c</field>
+            </layoutItems>
+        </layoutColumns>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Call_Date__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Sentiment__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Source_Channel__c</field>
+            </layoutItems>
+        </layoutColumns>
+        <style>TwoColumnsTopToBottom</style>
+    </layoutSections>
+    <layoutSections>
+        <customLabel>true</customLabel>
+        <detailHeading>true</detailHeading>
+        <editHeading>true</editHeading>
+        <label>How This Was Captured</label>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Logged_By_Rep__c</field>
+            </layoutItems>
+        </layoutColumns>
+        <layoutColumns/>
+        <style>TwoColumnsTopToBottom</style>
+    </layoutSections>
+    <layoutSections>
+        <customLabel>true</customLabel>
+        <detailHeading>true</detailHeading>
+        <editHeading>false</editHeading>
+        <label>Cached Extraction (Diagnostic)</label>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Extraction_JSON__c</field>
+            </layoutItems>
+        </layoutColumns>
+        <style>OneColumn</style>
+    </layoutSections>
+    <!--
+      Backed by Scribe_Change_Log__c.Source_Call_Log__c (relationshipName
+      Change_Logs). This is the "what did Scribe write from this one call" list.
+    -->
+    <relatedLists>
+        <fields>NAME</fields>
+        <fields>Change_Type__c</fields>
+        <fields>Object_API_Name__c</fields>
+        <fields>Related_Record_Name__c</fields>
+        <fields>Field_Name__c</fields>
+        <fields>Old_Value__c</fields>
+        <fields>New_Value__c</fields>
+        <fields>Rep_Confirmed__c</fields>
+        <fields>CREATED_DATE</fields>
+        <relatedList>Scribe_Change_Log__c.Source_Call_Log__c</relatedList>
+        <sortField>CREATED_DATE</sortField>
+        <sortOrder>Desc</sortOrder>
+    </relatedLists>
+    <!--
+      Backed by Contact.Scribe_Source_Call_Log__c (relationshipName
+      Scribe_Contacts). Column names use the vocabulary that actually resolves for
+      Contact (FULL_NAME / CONTACT.*), not NAME / TITLE / EMAIL.
+    -->
+    <relatedLists>
+        <fields>FULL_NAME</fields>
+        <fields>CONTACT.TITLE</fields>
+        <fields>CONTACT.EMAIL</fields>
+        <fields>CONTACT.PHONE1</fields>
+        <relatedList>Contact.Scribe_Source_Call_Log__c</relatedList>
+    </relatedLists>
+</Layout>
