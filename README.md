@@ -199,6 +199,17 @@ Remaining, environment-limited:
 - **Apex PMD/SFGE static analysis** was not run here because no Java runtime is installed (`sf code-analyzer` PMD/SFGE engines require Java 11). SLDS/ESLint analysis passes. Run `sf code-analyzer run --target force-app` on a machine with Java to exercise the Apex engines.
 - **Agent publish/activate:** the bundle deploys cleanly, but `sf agent validate`/`preview` (the `afscript/v2/parseandcompile` reasoner endpoint) returned 422 across every available org, a service-side issue independent of the bundle. Re-run `sf agent validate authoring-bundle --api-name Scribe_Agent` when that service is reachable, then `sf agent publish` / `sf agent activate`.
 
+## Screenshots
+
+Captured from a live org at a 1200px viewport.
+
+| | |
+|---|---|
+| ![Scribe Home](docs/screenshots/01-home.png) | ![Change Log](docs/screenshots/02-change-log.png) |
+| **Scribe Home.** Field values overwritten leads the page, because it is the only change type that can replace what a human entered. | **Change Log.** The transcript view: what Scribe heard beside what Scribe wrote. |
+| ![Call Logs](docs/screenshots/03-call-logs.png) | ![Change Logs](docs/screenshots/04-change-log-list.png) |
+| **Call Logs.** All Call Logs, the tab default. | **Change Logs.** All Changes, the full audit trail. |
+
 ## License
 
 [MIT](LICENSE) © 2026 VurtuoLabs
